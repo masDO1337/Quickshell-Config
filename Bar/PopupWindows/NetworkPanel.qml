@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import Quickshell
 import "../../services" as Services
 import "UI" as UI
 
@@ -161,10 +162,7 @@ Tooltip {
                         }
 
                         UI.Button {
-                            showIcon: false
-                            showText: true
-                            text: "Remove"
-                            textSize: 12
+                            source: Qt.resolvedUrl(Quickshell.shellPath("Icons/trash.svg"))
                             visible: Services.Iwd.isKnown(node.modelData.ssid)
 
                             onClicked: () => Services.Iwd.remove(node.modelData.ssid)
