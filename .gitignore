@@ -1,0 +1,22 @@
+# Editor files
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build / cache artifacts
+__pycache__/
+*.py[cod]
+*.qmlc
+*.jsc
+
+# Logs
+*.log
+
+# QuickShell specific
+.qmlls.ini
+.qmllss.ini
