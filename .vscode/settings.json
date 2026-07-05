@@ -1,5 +1,0 @@
-{
-    "qt-qml.preview.args": [
-        "--no-cmake-calls"
-    ]
-}
