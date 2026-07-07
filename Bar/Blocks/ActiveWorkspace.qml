@@ -7,8 +7,8 @@ import Quickshell.Hyprland
 
 Item {
     Layout.fillHeight: true
-    implicitWidth: row.implicitWidth
-    id: activeWorkspace
+    Layout.preferredWidth: row.implicitWidth
+    id: root
 
     property string title: ""
 
@@ -18,7 +18,7 @@ Item {
         running: true
 
         stdout: SplitParser {
-            onRead: data => activeWorkspace.title = data
+            onRead: data => root.title = data
         }
     }
 
@@ -41,12 +41,12 @@ Item {
         }
 
         Text {
-            text: activeWorkspace.title
+            text: root.title
             Layout.maximumWidth: 600
             elide: Text.ElideRight
             font.pixelSize: 13
             font.bold: true
-            color: Hyprland.focusedMonitor == Hyprland.monitorFor(screen) ? "#e5f29c" : "#CCCCCC"
+            color: Hyprland.focusedMonitor == Hyprland.monitorFor(screen) ? "#e5f29c" : "#828282"
         }
     }
 }
