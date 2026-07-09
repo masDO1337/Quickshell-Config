@@ -15,7 +15,7 @@ Item {
         id: box
         anchors.centerIn: parent
 
-        source: Qt.resolvedUrl(Quickshell.shellPath("Icons/bluetooth.svg"))
+        source: Services.Bluetooth.enabled ? Qt.resolvedUrl(Quickshell.shellPath("Icons/bluetooth.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/bluetooth-off.svg"))
 
         onClicked: () => panel.toggle()
     }
