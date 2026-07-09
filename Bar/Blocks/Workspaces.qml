@@ -28,12 +28,29 @@ Rectangle {
 
                 spaseWidth: 16
 
-                color: mouse.containsMouse ? "#828282" : '#00ffffff'
+                color: modelData.urgent ? "#f3a6a6" : mouse.containsMouse ? "#828282" : '#00ffffff'
+
+                SequentialAnimation on opacity {
+                    running: workspace.modelData.urgent
+                    loops: Animation.Infinite
+
+                    NumberAnimation {
+                        to: 0.55
+                        duration: 500
+                        easing.type: Easing.InOutQuad
+                    }
+
+                    NumberAnimation {
+                        to: 1.0
+                        duration: 500
+                        easing.type: Easing.InOutQuad
+                    }
+                }
 
                 showIcon: false
                 showText: true
                 text: modelData.id <= 0 ? modelData.name.split("special:")[1] : modelData.name
-                textColor: modelData.focused ? "#f3a6a6" : mouse.containsMouse ? "#1e1e1e" : "#828282"
+                textColor: modelData.focused ? "#f3a6a6" : mouse.containsMouse || modelData.urgent ? "#1e1e1e" : "#828282"
 
                 onClicked: () => {
                     if (modelData.id <= 0) {
