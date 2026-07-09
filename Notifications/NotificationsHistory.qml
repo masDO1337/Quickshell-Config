@@ -35,6 +35,12 @@ ListView {
         color: "transparent"
         border.width: 1
         border.color: urgencyColor
+
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+            onEntered: resultsList.currentIndex = delegateRoot.index
+        }
         
         ColumnLayout {
             id: content
@@ -71,6 +77,10 @@ ListView {
                     font.pixelSize: 16
                     elide: Text.ElideRight
                 }
+
+                ExitButton {
+                    onClicked: () => Services.Notifications.history.remove(delegateRoot.index)
+                }
             }
 
             Text {
@@ -83,15 +93,6 @@ ListView {
                 visible: text !== ""
             }
         }
-
-        MouseArea {
-            anchors.fill: parent
-            hoverEnabled: true
-            cursorShape: Qt.PointingHandCursor
-            onClicked: Services.Notifications.history.remove(delegateRoot.index)
-            onPositionChanged: resultsList.currentIndex = delegateRoot.index
-        }
-
     }
 
     Text {

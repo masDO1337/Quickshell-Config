@@ -97,7 +97,7 @@ PanelWindow {
                 }
             }
 
-            NotificationsListView {
+            NotificationsHistory {
                 model: Services.Notifications.history
                 currentIndex: 0
             }

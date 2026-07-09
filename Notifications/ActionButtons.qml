@@ -21,12 +21,11 @@ RowLayout {
 
             Layout.preferredHeight: 26
             Layout.fillWidth: true
-            border.width: 1
-            border.color: root.n.urgencyColor
-            color: actionHover.containsMouse ? '#1e1e1e' : "transparent"
+            radius: 6
+            color: actionHover.containsMouse ? '#487f7f7f' : '#1e1e1e'
 
             Behavior on color {
-                ColorAnimation { duration: 100 }
+                ColorAnimation { duration: 350; easing.type: Easing.OutCubic }
             }
 
             Text {

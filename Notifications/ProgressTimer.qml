@@ -12,10 +12,13 @@ Rectangle {
     color: "#1e1e1e"
     radius: 1
     Layout.topMargin: 2
-    visible: n.modelData.urgency !== NotificationUrgency.Critical
+    visible: n.modelData.urgency === NotificationUrgency.Normal
 
     Rectangle {
         id: progressBar
+
+        property var initWidth: parent.width
+        
         height: parent.height
         width: parent.width
         radius: 1
@@ -28,6 +31,7 @@ Rectangle {
             NumberAnimation {
                 target: progressBar
                 property: "width"
+                from: progressBar.initWidth
                 to: 0
                 duration: root.n.intervalTimer
             }
