@@ -1,6 +1,6 @@
-import Quickshell // for PanelWindow
+import Quickshell
 import QtQuick.Layouts
-import QtQuick // for Text
+import QtQuick
 import "Blocks" as Blocks
 
 PanelWindow {
