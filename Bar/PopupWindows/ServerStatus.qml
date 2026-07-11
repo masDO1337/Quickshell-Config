@@ -79,6 +79,13 @@ Tooltip {
             }
 
             Text {
+                text: `${Services.ServerStatus.mc.error ?? ""}`
+                color: 'white'
+                font.pixelSize: 12
+                visible: text.length > 0
+            }
+
+            Text {
                 text: `${Services.ServerStatus.mc.description ?? ""}`
                 color: 'white'
                 font.pixelSize: 16
