@@ -106,7 +106,7 @@ Tooltip {
 
                     Rectangle {
                         width: 3
-                        height: 3
+                        height: 16
                         radius: 2
                         color: "#808080"
                         anchors.left: parent.left
@@ -121,8 +121,8 @@ Tooltip {
                     required property int index
 
                     width: resultsList.width
-                    height: 20
-                    radius: 8
+                    height: 25
+                    radius: 6
                     color: "transparent"
 
                     RowLayout {
@@ -131,7 +131,7 @@ Tooltip {
                         anchors.rightMargin: 12
                         spacing: 0
 
-                        RowLayout{
+                        RowLayout {
                             Layout.preferredWidth: 160
                             Layout.maximumWidth: 160
                             spacing: 2
@@ -139,16 +139,16 @@ Tooltip {
                             Text {
                                 Layout.maximumWidth: 155
                                 text: delegateRoot.modelData.name
-                                color: "white"
-                                font.pixelSize: 13
+                                color: resultsList.currentIndex === delegateRoot.index ? "white" : "#828282"
+                                font.pixelSize: 12
+                                font.bold: resultsList.currentIndex === delegateRoot.index
                                 elide: Text.ElideRight
                             }
 
                             Text {
                                 text: delegateRoot.modelData.from !== "pacman" ? `(${delegateRoot.modelData.from})` : ""
                                 color: "#828282"
-                                font.pixelSize: 13
-                                Layout.alignment: Qt.AlignLeft
+                                font.pixelSize: 12
                                 visible: text !== ""
                             }
                             Item { Layout.fillWidth: true }
@@ -158,7 +158,7 @@ Tooltip {
                             Layout.fillWidth: true    
                             Text {
                                 text: delegateRoot.modelData.old
-                                color: "#f3a6a6"
+                                color: resultsList.currentIndex === delegateRoot.index ? "#f3a6a6" : "#828282"
                                 font.pixelSize: 12
                                 anchors.centerIn: parent
                                 elide: Text.ElideRight
@@ -168,7 +168,7 @@ Tooltip {
                             Layout.fillWidth: true
                             Text {
                                 text: delegateRoot.modelData.new
-                                color: '#bcf3a6'
+                                color: resultsList.currentIndex === delegateRoot.index ? '#bcf3a6' : "#828282"
                                 font.pixelSize: 12
                                 anchors.centerIn: parent
                                 elide: Text.ElideRight

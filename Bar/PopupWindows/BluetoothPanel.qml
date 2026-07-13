@@ -41,7 +41,7 @@ Tooltip {
             Text {
                 Layout.fillWidth: true
                 text: Services.Bluetooth.statusText
-                color: "#bfbfbf"
+                color: "#808080"
                 font.pixelSize: 12
             }
 
@@ -80,7 +80,7 @@ Tooltip {
                 Layout.alignment: Qt.AlignVCenter
                 visible: Services.Bluetooth.available && !Services.Bluetooth.enabled
                 text: "Turn Bluetooth on to see devices"
-                color: "#bfbfbf"
+                color: "#808080"
                 font.pixelSize: 12
             }
 
@@ -157,14 +157,16 @@ Tooltip {
                                 text: node.modelData.name || node.modelData.deviceName || node.modelData.address || "Unknown"
                                 color: node.modelData.connected ?? false
                                     ? "#a6f3b0"
-                                    : "white"
+                                    : list.currentIndex === node.index 
+                                    ? "white"
+                                    : "#808080"
                                 font.pixelSize: 13
                                 elide: Text.ElideRight
                             }
 
                             Text {
                                 text: BluetoothDeviceState.toString(node.modelData.state ?? BluetoothDeviceState.Disconnected)
-                                color: "#bfbfbf"
+                                color: "#808080"
                                 font.pixelSize: 11
                                 elide: Text.ElideRight
                             }
@@ -204,7 +206,6 @@ Tooltip {
                             showText: true
                             text: node.modelData.trusted ? "Untrust" : "Trust"
                             textSize: 12
-                            textBold: true
                             visible: node.modelData.paired ?? false
 
                             onClicked: () => node.modelData.trusted = !node.modelData.trusted

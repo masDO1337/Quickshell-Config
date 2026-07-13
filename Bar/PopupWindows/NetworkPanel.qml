@@ -52,7 +52,7 @@ Tooltip {
             Text {
                 Layout.fillWidth: true
                 text: Services.Iwd.statusText
-                color: "#bfbfbf"
+                color: "#808080"
                 font.pixelSize: 12
                 elide: Text.ElideRight
             }
@@ -155,7 +155,7 @@ Tooltip {
                             Text {
                                 Layout.fillWidth: true
                                 text: node.modelData.security
-                                color: "#999"
+                                color: "#808080"
                                 font.pixelSize: 11
                                 elide: Text.ElideRight
                             }
