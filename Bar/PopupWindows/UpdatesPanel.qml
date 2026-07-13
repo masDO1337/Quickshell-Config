@@ -18,7 +18,7 @@ Tooltip {
         anchors.centerIn: parent
 
         implicitWidth: Services.Updates.showUpdates ? 400 : 200
-        implicitHeight: Services.Updates.showUpdates ? 600 : row.implicitHeight + 40
+        implicitHeight: resultsList.implicitHeight + row.implicitHeight + 20
 
         ColumnLayout {
             anchors.fill: parent
@@ -92,9 +92,10 @@ Tooltip {
                 model: Services.Updates.packages
 
                 Layout.fillWidth: true
-                Layout.fillHeight: true
+                implicitHeight: Math.min(contentHeight, 600)
+
                 clip: true
-                spacing: 4
+                spacing: 0
                 boundsBehavior: Flickable.StopAtBounds
                 highlightMoveDuration: 150
                 highlightMoveVelocity: -1
