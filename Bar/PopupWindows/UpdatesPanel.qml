@@ -16,7 +16,7 @@ Tooltip {
     Item {
         anchors.fill: parent
 
-        implicitWidth: Math.max(column.implicitWidth, 460)
+        implicitWidth: Math.max(column.implicitWidth, 350)
         implicitHeight: column.implicitHeight
 
         ColumnLayout {
