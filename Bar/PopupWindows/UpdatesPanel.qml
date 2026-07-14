@@ -16,12 +16,12 @@ Tooltip {
     Item {
         anchors.fill: parent
 
-        implicitWidth: column.implicitWidth
+        implicitWidth: Math.max(column.implicitWidth, 460)
         implicitHeight: column.implicitHeight
 
         ColumnLayout {
             id: column
-            anchors.centerIn: parent
+            anchors.fill: parent
             spacing: 0
 
             RowLayout {
@@ -140,7 +140,6 @@ Tooltip {
                             spacing: 2
 
                             Text {
-                                Layout.maximumWidth: 155
                                 text: delegateRoot.modelData.name
                                 color: resultsList.currentIndex === delegateRoot.index ? "white" : "#828282"
                                 font.pixelSize: 12
@@ -154,28 +153,23 @@ Tooltip {
                                 font.pixelSize: 12
                                 visible: text !== ""
                             }
-                            Item { Layout.fillWidth: true }
+                        }
+  
+                        Text {
+                            Layout.preferredWidth: 60
+                            text: delegateRoot.modelData.old
+                            color: resultsList.currentIndex === delegateRoot.index ? "#f3a6a6" : "#828282"
+                            font.pixelSize: 12
+                            elide: Text.ElideRight
                         }
 
-                        Item {
-                            Layout.fillWidth: true    
-                            Text {
-                                text: delegateRoot.modelData.old
-                                color: resultsList.currentIndex === delegateRoot.index ? "#f3a6a6" : "#828282"
-                                font.pixelSize: 12
-                                anchors.centerIn: parent
-                                elide: Text.ElideRight
-                            }
-                        }
-                        Item{
-                            Layout.fillWidth: true
-                            Text {
-                                text: delegateRoot.modelData.new
-                                color: resultsList.currentIndex === delegateRoot.index ? '#bcf3a6' : "#828282"
-                                font.pixelSize: 12
-                                anchors.centerIn: parent
-                                elide: Text.ElideRight
-                            }
+                        Text {
+                            Layout.preferredWidth: 60
+                            text: delegateRoot.modelData.new
+                            color: resultsList.currentIndex === delegateRoot.index ? '#bcf3a6' : "#828282"
+                            font.pixelSize: 12
+                            elide: Text.ElideRight
+                            Layout.alignment: Qt.AlignRight
                         }
                     }
 
