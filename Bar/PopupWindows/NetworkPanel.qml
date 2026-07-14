@@ -14,7 +14,7 @@ Tooltip {
 
         ColumnLayout {
             id: mainColumn
-            anchors.centerIn: parent
+            anchors.fill: parent
             spacing: 0
 
             ColumnLayout {
