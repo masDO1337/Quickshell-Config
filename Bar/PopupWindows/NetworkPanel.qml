@@ -41,7 +41,6 @@ Tooltip {
                         textSize: 12
 
                         onClicked: () => Services.Iwd.setPowered(!Services.Iwd.powered)
-                        visible: Services.Iwd.deviceFound
                     }
 
                     UI.Button {
@@ -51,7 +50,6 @@ Tooltip {
                         textSize: 12
 
                         onClicked: () => Services.Iwd.refresh()
-                        visible: Services.Iwd.deviceFound
                     }
                 }
 
@@ -69,13 +67,11 @@ Tooltip {
                 height: 4
                 radius: 2
                 color: "#1e1e1e"
-                visible: Services.Iwd.deviceFound
             }
 
             RowLayout {
                 Layout.fillWidth: true
                 Layout.margins: 10
-                visible: Services.Iwd.deviceFound
 
                 Text {
                     Layout.fillWidth: true
@@ -101,8 +97,6 @@ Tooltip {
                 Layout.margins: 10
                 implicitHeight: Math.min(contentHeight, 260)
                 clip: true
-
-                visible: Services.Iwd.deviceFound
 
                 model: Services.Iwd.networks
 
@@ -197,7 +191,7 @@ Tooltip {
                 implicitHeight: 32
                 radius: 6
                 color: disconnectMouse.containsMouse ? "#7f4f4f" : "#5a3535"
-                visible: Services.Iwd.connected && Services.Iwd.deviceFound
+                visible: Services.Iwd.connected
 
                 Text {
                     anchors.centerIn: parent

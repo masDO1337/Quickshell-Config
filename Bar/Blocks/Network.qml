@@ -78,7 +78,7 @@ Item {
         text: Services.Iwd.connectedNetwork
         textColor:"#a6f3b0"
 
-        onClicked: () => networkPanel.toggle()
+        onClicked: () => { if (Services.Iwd.deviceFound) networkPanel.toggle() }
     }
 
     Tooltip {
