@@ -8,53 +8,60 @@ import "UI" as UI
 
 Tooltip {
     Item {
-        implicitWidth: Services.Iwd.deviceFound ? 360 : mainColumn.implicitWidth
+        anchors.fill: parent
+        implicitWidth: mainColumn.implicitWidth
         implicitHeight: mainColumn.implicitHeight
 
         ColumnLayout {
             id: mainColumn
-            width: parent.width
-            spacing: 10
+            anchors.centerIn: parent
+            spacing: 0
 
-            RowLayout {
+            ColumnLayout {
                 Layout.fillWidth: true
-                spacing: 8
+                Layout.margins: 10
+                spacing: 6
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 8
+
+                    Text {
+                        Layout.fillWidth: true
+                        text: "WiFi"
+                        color: "white"
+                        font.pixelSize: 16
+                        font.bold: true
+                    }
+
+                    UI.Button {
+                        showIcon: false
+                        showText: true
+                        text: Services.Iwd.powered ? "Turn off" : "Turn on"
+                        textSize: 12
+
+                        onClicked: () => Services.Iwd.setPowered(!Services.Iwd.powered)
+                        visible: Services.Iwd.deviceFound
+                    }
+
+                    UI.Button {
+                        showIcon: false
+                        showText: true
+                        text: "Refresh"
+                        textSize: 12
+
+                        onClicked: () => Services.Iwd.refresh()
+                        visible: Services.Iwd.deviceFound
+                    }
+                }
 
                 Text {
                     Layout.fillWidth: true
-                    text: "WiFi"
-                    color: "white"
-                    font.pixelSize: 16
-                    font.bold: true
+                    text: Services.Iwd.statusText
+                    color: "#808080"
+                    font.pixelSize: 12
+                    elide: Text.ElideRight
                 }
-
-                UI.Button {
-                    showIcon: false
-                    showText: true
-                    text: Services.Iwd.powered ? "Turn off" : "Turn on"
-                    textSize: 12
-
-                    onClicked: () => Services.Iwd.setPowered(!Services.Iwd.powered)
-                    visible: Services.Iwd.deviceFound
-                }
-
-                UI.Button {
-                    showIcon: false
-                    showText: true
-                    text: "Refresh"
-                    textSize: 12
-
-                    onClicked: () => Services.Iwd.refresh()
-                    visible: Services.Iwd.deviceFound
-                }
-            }
-
-            Text {
-                Layout.fillWidth: true
-                text: Services.Iwd.statusText
-                color: "#808080"
-                font.pixelSize: 12
-                elide: Text.ElideRight
             }
 
             Rectangle {
