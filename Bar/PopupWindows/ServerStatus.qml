@@ -13,10 +13,11 @@ Tooltip {
         ColumnLayout {
             id: mainColumn
             anchors.fill: parent
-            spacing: 10
+            spacing: 0
 
             RowLayout {
                 Layout.fillWidth: true
+                Layout.margins: 10
                 spacing: 4
 
                 Text {
@@ -58,17 +59,23 @@ Tooltip {
                 }
             }
 
-            Text {
-                text: `${Services.ServerStatus.status}`
-                color: "#bfbfbf"
-                font.pixelSize: 12
-            }
+            ColumnLayout {
+                Layout.fillWidth: true
+                Layout.margins: 10
+                spacing: 6
 
-            Text {
-                text: `Lateney: ${Services.ServerStatus.serverLatency} ms`
-                color: "#bfbfbf"
-                font.pixelSize: 12
-                visible: Services.ServerStatus.serverLatency >= 0
+                Text {
+                    text: `${Services.ServerStatus.status}`
+                    color: "#bfbfbf"
+                    font.pixelSize: 12
+                }
+
+                Text {
+                    text: `Lateney: ${Services.ServerStatus.serverLatency} ms`
+                    color: "#bfbfbf"
+                    font.pixelSize: 12
+                    visible: Services.ServerStatus.serverLatency >= 0
+                }
             }
 
             Rectangle {
@@ -78,32 +85,38 @@ Tooltip {
                 color: "#1e1e1e"
             }
 
-            Text {
-                text: `${Services.ServerStatus.mc.error ?? ""}`
-                color: 'white'
-                font.pixelSize: 12
-                visible: text.length > 0
-            }
+            ColumnLayout {
+                Layout.fillWidth: true
+                Layout.margins: 10
+                spacing: 6
 
-            Text {
-                text: `${Services.ServerStatus.mc.description ?? ""}`
-                color: 'white'
-                font.pixelSize: 16
-                visible: text.length > 0
-            }
+                Text {
+                    text: `${Services.ServerStatus.mc.error ?? ""}`
+                    color: 'white'
+                    font.pixelSize: 12
+                    visible: text.length > 0
+                }
 
-            Text {
-                text: `${Services.ServerStatus.mc.players?.online ?? ""}/${Services.ServerStatus.mc.players?.max ?? ""}`
-                color: '#19960e'
-                font.pixelSize: 12
-                visible: text.length > 1
-            }
+                Text {
+                    text: `${Services.ServerStatus.mc.description ?? ""}`
+                    color: 'white'
+                    font.pixelSize: 16
+                    visible: text.length > 0
+                }
 
-            Text {
-                text: `Last checked: ${Qt.formatDateTime(Services.ServerStatus.lastChecked, "hh : mm")}`
-                color: "#bfbfbf"
-                font.pixelSize: 12
-                visible: Services.ServerStatus.serverLatency >= 0
+                Text {
+                    text: `${Services.ServerStatus.mc.players?.online ?? ""}/${Services.ServerStatus.mc.players?.max ?? ""}`
+                    color: '#19960e'
+                    font.pixelSize: 12
+                    visible: text.length > 1
+                }
+
+                Text {
+                    text: `Last checked: ${Qt.formatDateTime(Services.ServerStatus.lastChecked, "hh : mm")}`
+                    color: "#bfbfbf"
+                    font.pixelSize: 12
+                    visible: Services.ServerStatus.serverLatency >= 0
+                }
             }
         }
     }

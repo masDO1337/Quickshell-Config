@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Effects
 import Quickshell
 import Quickshell.Services.Mpris
 import "UI" as UI
@@ -37,21 +38,45 @@ Tooltip {
                 Layout.preferredHeight: 180
                 color: "transparent"
 
-                Behavior on color {
-                    ColorAnimation { duration: 350; easing.type: Easing.OutCubic }
-                }
-                
-                radius: 4
-
-                Image {
+                Item {
                     anchors.fill: parent
-                    fillMode: Image.PreserveAspectFit
-                    source: Qt.resolvedUrl(node.modelData.trackArtUrl)
+                    anchors.margins: 4
+
                     visible: node.modelData.trackArtUrl !== ""
 
-                    Rectangle {
+                    Image {
+                        id: sourceImage
                         anchors.fill: parent
-                        color: '#aa000000'
+                        fillMode: Image.PreserveAspectCrop
+                        source: Qt.resolvedUrl(node.modelData.trackArtUrl)
+                        visible: false
+                    }
+
+                    MultiEffect {
+                        anchors.fill: sourceImage
+                        source: sourceImage
+
+                        maskEnabled: true
+                        maskSource: mask
+                    }
+
+                    Item {
+                        id: mask
+                        width: sourceImage.width
+                        height: sourceImage.height
+                        layer.enabled: true
+                        visible: false
+
+                        Rectangle {
+                            anchors.fill: parent
+                            radius: 8
+                        }
+                    }
+                    
+                    Rectangle {
+                        anchors.fill: sourceImage
+                        color: '#8f000000'
+                        radius: 4
                     }
                 }
 

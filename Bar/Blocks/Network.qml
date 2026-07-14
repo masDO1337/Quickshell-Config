@@ -86,23 +86,31 @@ Item {
 
         hover: box.mouse.containsMouse && root.netType !== 2
 
-        Column {
-            anchors.centerIn: parent
-            spacing: 10
+        Item {
+            anchors.fill: parent
+            implicitWidth: column.implicitWidth + 20
+            implicitHeight: column.implicitHeight + 20
 
-            Text {
-                text: `${root.netIface}`
-                color: "#fff"
-                font.pixelSize: 16
-                font.bold: true
-            }
+            ColumnLayout {
+                id: column
+                anchors.centerIn: parent
+                spacing: 6
 
-            Text {
-                Layout.fillWidth: true
-                text: root.netIp !== "" ? `IP: ${root.netIp}` : ""
-                color: "#bfbfbf"
-                font.pixelSize: 12
-                elide: Text.ElideRight
+                Text {
+                    text: `${root.netIface}`
+                    color: "#fff"
+                    font.pixelSize: 16
+                    font.bold: true
+                    Layout.alignment: Qt.AlignHCenter
+                }
+
+                Text {
+                    Layout.fillWidth: true
+                    text: root.netIp
+                    color: "#808080"
+                    font.pixelSize: 12
+                    visible: root.netIp !== ""
+                }
             }
         }
     }

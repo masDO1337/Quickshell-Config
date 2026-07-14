@@ -60,15 +60,15 @@ LazyLoader {
 
         color: "transparent"
 
-        implicitWidth: body.implicitWidth + 10
+        implicitWidth: body.implicitWidth
         implicitHeight: body.implicitHeight
 
         Rectangle {
             id: body
 
             anchors.fill: parent
-            implicitWidth: content.implicitWidth + 20
-            implicitHeight: content.implicitHeight + 20
+            implicitWidth: content.implicitWidth
+            implicitHeight: content.implicitHeight
 
             Behavior on implicitWidth {
                 NumberAnimation { duration: 350; easing.type: Easing.OutCubic }
@@ -85,7 +85,7 @@ LazyLoader {
 
             Loader {
                 id: content
-                anchors.centerIn: parent
+                anchors.fill: parent
                 sourceComponent: root.contentDelegate
                 active: true
             }

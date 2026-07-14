@@ -22,11 +22,12 @@ Tooltip {
 
         ColumnLayout {
             anchors.fill: parent
-            spacing: 6
+            spacing: 0
 
             RowLayout {
                 id: row
                 Layout.alignment: Qt.AlignHCenter
+                Layout.margins: 10
                 spacing: 20
 
                 RowLayout {
@@ -92,6 +93,7 @@ Tooltip {
                 model: Services.Updates.packages
 
                 Layout.fillWidth: true
+                Layout.margins: 10
                 implicitHeight: Math.min(contentHeight, 600)
 
                 clip: true

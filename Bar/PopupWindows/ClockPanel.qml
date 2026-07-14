@@ -12,8 +12,9 @@ Tooltip {
 
     Item {
         id: calendarPanel
+        anchors.centerIn: parent
 
-        implicitWidth: 252
+        implicitWidth: calendarColumn.implicitWidth
         implicitHeight: calendarColumn.implicitHeight
 
         property date shownDate: root.clock.date
@@ -50,11 +51,12 @@ Tooltip {
 
         ColumnLayout {
             id: calendarColumn
-            width: parent.implicitWidth
-            spacing: 10
+            anchors.fill: parent
+            spacing: 0
 
             RowLayout {
                 Layout.fillWidth: true
+                Layout.margins: 10
                 spacing: 8
 
                 UI.Button {
@@ -79,6 +81,7 @@ Tooltip {
 
             GridLayout {
                 Layout.fillWidth: true
+                Layout.margins: 10
                 columns: 7
                 rowSpacing: 4
                 columnSpacing: 4
@@ -103,6 +106,9 @@ Tooltip {
 
             GridLayout {
                 Layout.fillWidth: true
+                Layout.leftMargin: 10
+                Layout.rightMargin: 10
+                Layout.bottomMargin: 10
                 columns: 7
                 rowSpacing: 4
                 columnSpacing: 4
@@ -158,6 +164,7 @@ Tooltip {
             UI.Button {
                 Layout.alignment: Qt.AlignHCenter
                 Layout.fillWidth: true
+                Layout.margins: 10
 
                 visible: calendarPanel.isNotMonth
 

@@ -32,11 +32,19 @@ Item {
         parentItem: root
         hover: box.mouse.containsMouse && Services.MprisPlayer.isPlaying
 
-        Text {
-            text: `${Services.MprisPlayer.activePlayer.trackTitle || "Unknown Title"} - ${Services.MprisPlayer.activePlayer.trackArtist || "Unknown Artist"}`
-            elide: Text.ElideRight
-            color: "white"
-            font.pixelSize: 13
+        Item {
+            anchors.fill: parent
+            implicitWidth: t.implicitWidth + 10
+            implicitHeight: t.implicitHeight + 10
+            
+            Text {
+                id: t
+                anchors.centerIn: parent
+                text: `${Services.MprisPlayer.activePlayer.trackTitle || "Unknown Title"} - ${Services.MprisPlayer.activePlayer.trackArtist || "Unknown Artist"}`
+                elide: Text.ElideRight
+                color: "white"
+                font.pixelSize: 12
+            }
         }
     }
 
