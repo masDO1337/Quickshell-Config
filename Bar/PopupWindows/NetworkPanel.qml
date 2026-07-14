@@ -9,11 +9,11 @@ import "UI" as UI
 Tooltip {
     Item {
         anchors.fill: parent
-        implicitWidth: Math.max(mainColumn.implicitWidth, 360)
-        implicitHeight: mainColumn.implicitHeight
+        implicitWidth: Math.max(column.implicitWidth, 360)
+        implicitHeight: column.implicitHeight
 
         ColumnLayout {
-            id: mainColumn
+            id: column
             anchors.fill: parent
             spacing: 0
 
