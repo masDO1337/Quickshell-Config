@@ -16,34 +16,40 @@ Tooltip {
         ColumnLayout {
             id: column
             anchors.fill: parent
-            spacing: 8
+            spacing: 0
 
-            RowLayout {
-                width: parent.width
-                spacing: 8
+            ColumnLayout {
+                Layout.fillWidth: true
+                Layout.margins: 10
+                spacing: 6
+
+                RowLayout {
+                    width: parent.width
+                    spacing: 8
+
+                    Text {
+                        Layout.fillWidth: true
+                        text: "Bluetooth"
+                        color: "white"
+                        font.pixelSize: 16
+                        font.bold: true
+                    }
+
+                    UI.Button {
+                        showIcon: false
+                        showText: true
+                        text: Services.Bluetooth.enabled ? "Turn off" : "Turn on"
+                        textSize: 12
+                        onClicked: () => Services.Bluetooth.toggle()
+                    }
+                }
 
                 Text {
                     Layout.fillWidth: true
-                    text: "Bluetooth"
-                    color: "white"
-                    font.pixelSize: 16
-                    font.bold: true
+                    text: Services.Bluetooth.statusText
+                    color: "#808080"
+                    font.pixelSize: 12
                 }
-
-                UI.Button {
-                    showIcon: false
-                    showText: true
-                    text: Services.Bluetooth.enabled ? "Turn off" : "Turn on"
-                    textSize: 12
-                    onClicked: () => Services.Bluetooth.toggle()
-                }
-            }
-
-            Text {
-                Layout.fillWidth: true
-                text: Services.Bluetooth.statusText
-                color: "#808080"
-                font.pixelSize: 12
             }
 
             Rectangle {
@@ -56,6 +62,7 @@ Tooltip {
 
             RowLayout {
                 Layout.fillWidth: true
+                Layout.margins: 10
                 visible: Services.Iwd.deviceFound
 
                 Text {
@@ -88,6 +95,7 @@ Tooltip {
             ListView {
                 id: list
                 Layout.fillWidth: true
+                Layout.margins: 10
                 implicitHeight: Math.min(contentHeight, 260)
                 clip: true
 
