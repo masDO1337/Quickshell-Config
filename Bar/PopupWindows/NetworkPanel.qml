@@ -9,7 +9,7 @@ import "UI" as UI
 Tooltip {
     Item {
         anchors.fill: parent
-        implicitWidth: mainColumn.implicitWidth
+        implicitWidth: Math.max(mainColumn.implicitWidth, 360)
         implicitHeight: mainColumn.implicitHeight
 
         ColumnLayout {
