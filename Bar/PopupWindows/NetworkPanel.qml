@@ -74,6 +74,7 @@ Tooltip {
 
             RowLayout {
                 Layout.fillWidth: true
+                Layout.margins: 10
                 visible: Services.Iwd.deviceFound
 
                 Text {
@@ -97,6 +98,7 @@ Tooltip {
             ListView {
                 id: list
                 Layout.fillWidth: true
+                Layout.margins: 10
                 implicitHeight: Math.min(contentHeight, 260)
                 clip: true
 
@@ -191,6 +193,7 @@ Tooltip {
 
             Rectangle {
                 Layout.fillWidth: true
+                Layout.margins: 10
                 implicitHeight: 32
                 radius: 6
                 color: disconnectMouse.containsMouse ? "#7f4f4f" : "#5a3535"
