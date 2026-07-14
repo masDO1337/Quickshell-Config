@@ -66,6 +66,16 @@ Tooltip {
                         font.pixelSize: 13
                         font.bold: true
                     }
+
+                    Item { Layout.fillWidth: true }
+
+                    UI.Button {
+                        showIcon: false
+                        showText: true
+                        text: sound.sink?.audio?.muted ? "unmute" : "mute"
+                        textSize: 13
+                        onClicked: () => { sound.sink.audio.muted = !sound.sink.audio.muted }
+                    }
                 }
 
                 Item {
@@ -112,6 +122,16 @@ Tooltip {
                         font.pixelSize: 13
                         font.bold: true
                     }
+
+                    Item { Layout.fillWidth: true }
+
+                    UI.Button {
+                        showIcon: false
+                        showText: true
+                        text: sound.source?.audio?.muted ? "unmute" : "mute"
+                        textSize: 13
+                        onClicked: () => { sound.source.audio.muted = !sound.source.audio.muted }
+                    }
                 }
 
                 Item {
@@ -140,9 +160,21 @@ Tooltip {
                 visible: sound.filter.length > 0
             }
 
-            ColumnLayout {
+            Text {
                 Layout.fillWidth: true
                 Layout.margins: 10
+                text: "Devices"
+                color: "white"
+                font.pixelSize: 13
+                font.bold: true
+            }
+
+            ColumnLayout {
+                Layout.fillWidth: true
+                Layout.leftMargin: 10
+                Layout.rightMargin: 10
+                Layout.bottomMargin: 10
+
                 spacing: 6
 
                 visible: sound.filter.length > 0
@@ -158,11 +190,7 @@ Tooltip {
 
                         Layout.fillWidth: true
                         Layout.preferredHeight: nodeColumn.implicitHeight
-                        color: mouseArea.containsMouse ? "#3c3c3c" : '#003c3c3c'
-
-                        Behavior on color {
-                            ColorAnimation { duration: 350; easing.type: Easing.OutCubic }
-                        }
+                        color: "transparent"
                         
                         radius: 4
 
@@ -170,16 +198,6 @@ Tooltip {
                             objects: [node.modelData]
                             onObjectsChanged: {
                                 node.modelData = sound.filter[node.index]
-                            }
-                        }
-
-                        MouseArea {
-                            id: mouseArea
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: {
-                                node.modelData.audio.muted = !node.modelData.audio.muted
                             }
                         }
 
@@ -216,6 +234,18 @@ Tooltip {
                                     color: "#a6e1f3"
                                     font.pixelSize: 13
                                     font.bold: true
+                                }
+
+                                Item { Layout.fillWidth: true }
+
+                                UI.Button {
+                                    showIcon: false
+                                    showText: true
+                                    text: node.modelData.audio.muted ? "unmute" : "mute"
+                                    textSize: 13
+                                    onClicked: () => {
+                                        node.modelData.audio.muted = !node.modelData.audio.muted
+                                    }
                                 }
                             }
 
