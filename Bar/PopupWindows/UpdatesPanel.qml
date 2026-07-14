@@ -14,14 +14,14 @@ Tooltip {
     }
 
     Item {
-        id: i
-        anchors.centerIn: parent
+        anchors.fill: parent
 
-        implicitWidth: Services.Updates.showUpdates ? 400 : 200
-        implicitHeight: resultsList.implicitHeight + row.implicitHeight + 20
+        implicitWidth: column.implicitWidth
+        implicitHeight: column.implicitHeight
 
         ColumnLayout {
-            anchors.fill: parent
+            id: column
+            anchors.centerIn: parent
             spacing: 0
 
             RowLayout {
