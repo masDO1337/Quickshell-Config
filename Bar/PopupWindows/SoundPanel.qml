@@ -161,10 +161,11 @@ Tooltip {
             Text {
                 Layout.fillWidth: true
                 Layout.margins: 10
-                text: "Devices"
+                text: "Playback"
                 color: "white"
-                font.pixelSize: 13
+                font.pixelSize: 14
                 font.bold: true
+                visible: sound.filter.length > 0
             }
 
             ColumnLayout {
@@ -223,14 +224,14 @@ Tooltip {
                                 Text { 
                                     text: `${node.modelData.description !== "" ? node.modelData.description : node.modelData.name}`
                                     color: "#a6e1f3"
-                                    font.pixelSize: 13
+                                    font.pixelSize: 12
                                     font.bold: true
                                 }
 
                                 Text { 
                                     text: `${Math.round(node.modelData.audio?.volume * 100)}%`
                                     color: "#a6e1f3"
-                                    font.pixelSize: 13
+                                    font.pixelSize: 12
                                     font.bold: true
                                 }
 
@@ -240,7 +241,7 @@ Tooltip {
                                     showIcon: false
                                     showText: true
                                     text: node.modelData.audio.muted ? "unmute" : "mute"
-                                    textSize: 13
+                                    textSize: 12
                                     onClicked: () => {
                                         node.modelData.audio.muted = !node.modelData.audio.muted
                                     }
