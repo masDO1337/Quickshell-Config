@@ -36,13 +36,13 @@ Tooltip {
                     Text {
                         text: "Pacman"
                         color:"#828282"
-                        font.pixelSize: 16
+                        font.pixelSize: 14
                     }
 
                     Text {
                         text: Services.Updates.packagesPacman
                         color: update.mouse.containsMouse ? "#fff" : "#828282"
-                        font.pixelSize: 16
+                        font.pixelSize: 14
                     }
                 }
 
@@ -52,13 +52,13 @@ Tooltip {
                     Text {
                         text: "AUR"
                         color: "#828282"
-                        font.pixelSize: 16
+                        font.pixelSize: 14
                     }
 
                     Text {
                         text: Services.Updates.packagesAUR
                         color: update.mouse.containsMouse ? "#fff" : "#828282"
-                        font.pixelSize: 16
+                        font.pixelSize: 14
                     }
                 }
 
@@ -75,6 +75,7 @@ Tooltip {
                     showIcon: false
                     showText: true
                     text: "Update All"
+                    textSize: 14
 
                     onClicked: () => root.onClicked("")
                 }
@@ -82,9 +83,8 @@ Tooltip {
 
             Rectangle {
                 Layout.fillWidth: true
-                implicitHeight: 4
-                radius: 2
-                color: '#1e1e1e'
+                implicitHeight: 1
+                color: '#afafaf'
             }
 
             ListView {  

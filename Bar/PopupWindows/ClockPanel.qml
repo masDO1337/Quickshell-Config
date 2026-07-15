@@ -79,6 +79,12 @@ Tooltip {
                 }
             }
 
+            Rectangle {
+                Layout.fillWidth: true
+                implicitHeight: 1
+                color: '#afafaf'
+            }
+
             GridLayout {
                 Layout.fillWidth: true
                 Layout.margins: 10

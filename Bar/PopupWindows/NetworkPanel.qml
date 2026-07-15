@@ -64,9 +64,8 @@ Tooltip {
 
             Rectangle {
                 Layout.fillWidth: true
-                height: 4
-                radius: 2
-                color: "#1e1e1e"
+                implicitHeight: 1
+                color: '#afafaf'
             }
 
             RowLayout {

@@ -35,8 +35,6 @@ Singleton {
 
         stderr: StdioCollector {
             onStreamFinished: {
-                // checkupdates exits non-zero when no updates sometimes, 
-                // so do not treat stderr as fatal here.
                 if (text.trim().length > 0)
                     console.log("Update check stderr:", text)
             }
@@ -109,8 +107,7 @@ Singleton {
             // package-name old-version -> new-version
             const match = line.match(/^(.+?)\s+(.+?)\s+->\s+(.+)$/)
 
-            if (!match)
-                continue
+            if (!match) continue
 
             packages.append({
                 name: match[1],
