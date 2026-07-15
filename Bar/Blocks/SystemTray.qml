@@ -62,11 +62,20 @@ Repeater {
 
             hover: box.mouse.containsMouse
 
-            Text {
-                text: modelData.title || modelData.id
-                color: "#fff"
-                font.pixelSize: 13
-                font.bold: true
+            Item {
+                anchors.fill: parent
+                implicitWidth: t.implicitWidth + 20
+                implicitHeight: t.implicitHeight + 20
+
+                Text {
+                    id: t
+                    anchors.centerIn: parent
+                    
+                    text: modelData.title || modelData.id
+                    color: "#fff"
+                    font.pixelSize: 13
+                    font.bold: true
+                }
             }
         }
     }
