@@ -124,7 +124,7 @@ Singleton {
 
     function runUpdate(packageName) {
         if (packageName !== "") {
-            update.command = ["kitty", "-e", "paru", "-S", packageName]
+            update.command = ["kitty", "-e", "paru", "-Sy", packageName]
             update.running = true
         } else {
             update.command = ["kitty", "-e", "paru"]
