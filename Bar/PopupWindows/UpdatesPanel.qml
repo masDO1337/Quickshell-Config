@@ -122,6 +122,7 @@ Tooltip {
                     id: delegateRoot
                     required property var modelData
                     required property int index
+                    property string from: modelData.from
 
                     width: resultsList.width
                     height: 25
@@ -140,18 +141,18 @@ Tooltip {
                             spacing: 2
 
                             Text {
+                                text: delegateRoot.from !== "pacman" ? `[${delegateRoot.from.toUpperCase()}]` : ""
+                                color: resultsList.currentIndex === delegateRoot.index ? "white" : "#828282"
+                                font.pixelSize: 12
+                                visible: text !== ""
+                            }
+
+                            Text {
                                 text: delegateRoot.modelData.name
                                 color: resultsList.currentIndex === delegateRoot.index ? "white" : "#828282"
                                 font.pixelSize: 12
                                 font.bold: resultsList.currentIndex === delegateRoot.index
                                 elide: Text.ElideRight
-                            }
-
-                            Text {
-                                text: delegateRoot.modelData.from !== "pacman" ? `(${delegateRoot.modelData.from})` : ""
-                                color: "#828282"
-                                font.pixelSize: 12
-                                visible: text !== ""
                             }
                         }
   
@@ -160,7 +161,7 @@ Tooltip {
                             text: delegateRoot.modelData.old
                             color: resultsList.currentIndex === delegateRoot.index ? "#f3a6a6" : "#828282"
                             font.pixelSize: 12
-                            elide: Text.ElideRight
+                            elide: Text.ElideLeft
                         }
 
                         Text {
@@ -168,7 +169,7 @@ Tooltip {
                             text: delegateRoot.modelData.new
                             color: resultsList.currentIndex === delegateRoot.index ? '#bcf3a6' : "#828282"
                             font.pixelSize: 12
-                            elide: Text.ElideRight
+                            elide: Text.ElideLeft
                             Layout.alignment: Qt.AlignRight
                         }
                     }
