@@ -7,19 +7,7 @@ import Quickshell.Io
 Singleton {
     id: root
 
-    property bool checking: false
-
-    property string serverHost: serverStatsFile.adapter.serverHost
-    onServerHostChanged: {
-        if (serverHost !== "") check()
-    }
-
-    property int serverPort: serverStatsFile.adapter.serverPort
-    onServerPortChanged: {
-        if (serverHost !== "") check()
-    }
-
-    readonly property FileView serverStatsFile: FileView {
+    readonly property FileView file: FileView {
         path: Quickshell.cachePath("server.json")
 
         watchChanges: true
@@ -30,18 +18,22 @@ Singleton {
         JsonAdapter {
             id: adapter
 
-            property string serverHost: ""
-            property int serverPort: 25565
+            property string host: ""
+            property int port: 25565
         }
+
+        onLoaded: root.check()
     }
 
-    property bool serverAlive: false
-    property int serverLatency: -1
+    readonly property string host: file.adapter.host
+    readonly property int port: file.adapter.port
 
-    property bool pcAlive: false
+    property bool checking: false
+    property bool serverOn: false
+
+    property int latency: -1
 
     property string status: "Unknown"
-    property string error: ""
 
     property date lastChecked: new Date(0)
 
@@ -86,105 +78,53 @@ Singleton {
                 return
             }
 
-            if (response.data[0] === root.serverHost && Number(response.data[1]) === root.serverPort) {
+            if (response.data[0] === root.host && Number(response.data[1]) === root.port) {
                 Polkit.error("Server is already set to this IP and port")
                 return
             }
 
-            root.serverStatsFile.adapter.serverHost = response.data[0]
-            root.serverStatsFile.adapter.serverPort = Number(response.data[1])
-            Polkit.accept(`Server is set to ${response.data[0]}:${response.data[1]}`)
+            root.file.adapter.host = response.data[0]
+            root.file.adapter.port = Number(response.data[1])
+            Polkit.accept(`Server is set to ${root.host}:${root.port}`)
         }
     }
 
     function setIP() {
         message.clear()
-        message.inputs[0].value = root.serverHost
-        message.inputs[1].value = root.serverPort
+        message.inputs[0].value = root.host
+        message.inputs[1].value = root.port
         Polkit.request(message)
     }
 
     function check() {
-        if (serverHost === "" || serverPort <= 0)
-            return
-        
-        if (serverChecker.running || pcChecker.running || mcStatusProc.running)
-            return
-
-        serverAlive = false
-        serverLatency = -1
-        pcAlive = false
+        if (host === "" || port <= 0) return
+        if (pcChecker.running || mcStatusProc.running) return
 
         checking = true
-        error = ""
+        serverOn = false
+        latency = -1
+
+        mc = {}
+
         status = "Checking server..."
-
-        serverChecker.command = [
-            "sh", "-c",
-            "start=$(date +%s%3N); " +
-            "timeout 2 bash -c '</dev/tcp/" + root.serverHost + "/" + root.serverPort + "' >/dev/null 2>&1; " +
-            "code=$?; " +
-            "end=$(date +%s%3N); " +
-            "echo \"$code $((end - start))\""
-        ]
-
-        serverChecker.running = true
+        mcStatusProc.running = true
     }
 
     function checkPc() {
         status = "Server offline, checking PC..."
-
-        pcChecker.command = [
-            "sh", "-c",
-            "ping -c 1 -W 2 " + root.serverHost + " | awk -F'time=' '/time=/{print $2}' | awk '{print $1}'"
-        ]
-
         pcChecker.running = true
-    }
-
-    function getMinecraftInfo() {
-        status = "Getting Minecraft info..."
-
-        mcStatusProc.command = [
-            Quickshell.shellPath("scripts/venv/bin/python"),
-            Quickshell.shellPath("scripts/mcserver.py"),
-            root.serverHost,
-            root.serverPort
-        ]
-
-        mcStatusProc.running = true
-    }
-
-    Component.onCompleted: check()
-
-    Process {
-        id: serverChecker
-        running: false
-
-        stdout: SplitParser {
-            onRead: line => {
-                const parts = line.trim().split(" ")
-                const code = Number(parts[0])
-                const ms = Number(parts[1])
-
-                root.serverAlive = code === 0
-                root.serverLatency = root.serverAlive ? ms : -1
-
-                if (root.serverAlive) {
-                    root.pcAlive = true
-                    root.getMinecraftInfo()
-                } else {
-                    root.checkPc()
-                }
-                root.lastChecked = new Date()
-            }
-        }
     }
 
     Process {
         id: mcStatusProc
-
         running: false
+
+        command: [
+            Quickshell.shellPath("scripts/venv/bin/python"),
+            Quickshell.shellPath("scripts/mcserver.py"),
+            root.host,
+            root.port
+        ]
 
         property string buffer: ""
 
@@ -198,17 +138,22 @@ Singleton {
             buffer = ""
         }
 
-        onExited: (exitCode, exitStatus) => {
+        onExited: () => {
             try {
-                const data = JSON.parse(buffer)
-                console.log(JSON.stringify(data))
-                
-                root.mc = data
-                root.status = "Server online"
+                //console.log(buffer)
+                root.mc = JSON.parse(buffer)
+
+                if (root.mc.online) {
+                    root.status = "Server online"
+                    root.serverOn = true
+                    root.latency = root.mc.latency_ms
+                    root.checking = false
+                } else {
+                    root.checkPc()
+                }
+
             } catch (e) {
-                root.serverAlive = false
-                root.error = String(e)
-                root.status = "Minecraft info error"
+                root.status = "Minecraft info error: " + String(e)
             }
 
             root.checking = false
@@ -220,20 +165,25 @@ Singleton {
         id: pcChecker
         running: false
 
+        command: [
+            "sh", "-c",
+            "ping -c 1 -W 2 " + root.host + " | awk -F'time=' '/time=/{print $2}' | awk '{print $1}'"
+        ]
+
         stdout: SplitParser {
             onRead: line => {
                 const ms = Number(line.trim())
 
-                root.pcAlive = !isNaN(ms)
-                root.serverLatency = root.pcAlive ? Math.round(ms) : -1
+                root.serverOn = !isNaN(ms)
+                root.latency = root.serverOn ? Math.round(ms) : -1
             }
         }
 
         onExited: () => {
-            if (root.serverAlive) {
-                root.status = "Server online"
-            } else if (root.pcAlive) {
-                root.status = "PC online, Minecraft server offline"
+            if (root.mc.error === "Server did not respond with any information!") {
+                root.status = "Server online?"
+            } else if (root.serverOn) {
+                root.status = "PC online, server offline"
             } else {
                 root.status = "PC offline"
             }

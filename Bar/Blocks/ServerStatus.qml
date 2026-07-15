@@ -14,7 +14,7 @@ Item {
         id: box
         anchors.centerIn: parent
 
-        source: Services.ServerStatus.pcAlive ? Qt.resolvedUrl(Quickshell.shellPath("Icons/server-white.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/server.svg"))
+        source: Services.ServerStatus.serverOn ? Qt.resolvedUrl(Quickshell.shellPath("Icons/server-white.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/server.svg"))
 
         showText: false
         text: ""
@@ -29,7 +29,7 @@ Item {
         }
     }
     
-    ServerStatus {
+    ServerStatusPanel {
         id: serverStatus
         parentItem: root
     }
