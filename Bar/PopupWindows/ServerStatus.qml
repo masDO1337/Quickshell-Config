@@ -104,7 +104,7 @@ Tooltip {
                 }
 
                 Text {
-                    text: `${Services.ServerStatus.mc.players?.online ?? ""}/${Services.ServerStatus.mc.players?.max ?? ""}`
+                    text: `Players: ${Services.ServerStatus.mc.players?.online ?? ""}/${Services.ServerStatus.mc.players?.max ?? ""}`
                     color: '#19960e'
                     font.pixelSize: 12
                     visible: text.length > 1
@@ -114,7 +114,6 @@ Tooltip {
                     text: `Last checked: ${Qt.formatDateTime(Services.ServerStatus.lastChecked, "hh : mm")}`
                     color: "#bfbfbf"
                     font.pixelSize: 12
-                    visible: Services.ServerStatus.serverLatency >= 0
                 }
             }
         }

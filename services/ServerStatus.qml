@@ -47,7 +47,7 @@ Singleton {
 
     property var mc: ({})
 
-    property var message: Polkit.Message {
+    property Polkit.Message message: Polkit.Message {
         title: "Set Server"
         message: `Enter IP and Port for server`
         inputs: [
@@ -176,6 +176,7 @@ Singleton {
                 } else {
                     root.checkPc()
                 }
+                root.lastChecked = new Date()
             }
         }
     }
