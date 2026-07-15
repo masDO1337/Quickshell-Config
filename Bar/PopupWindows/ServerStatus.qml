@@ -61,7 +61,9 @@ Tooltip {
 
             ColumnLayout {
                 Layout.fillWidth: true
-                Layout.margins: 10
+                Layout.leftMargin: 10
+                Layout.rightMargin: 10
+                Layout.bottomMargin: 10
                 spacing: 6
 
                 Text {
