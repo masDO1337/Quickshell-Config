@@ -87,29 +87,32 @@ Tooltip {
             }
 
             ColumnLayout {
+                id: server
                 Layout.fillWidth: true
                 Layout.margins: 10
                 spacing: 6
 
+                property var mc: Services.ServerStatus.mc
+
                 Text {
-                    text: `${Services.ServerStatus.mc.error ?? ""}`
+                    text: `${server.mc.error ?? ""}`
                     color: 'white'
                     font.pixelSize: 12
                     visible: text.length > 0
                 }
 
                 Text {
-                    text: `${Services.ServerStatus.mc.description ?? ""}`
+                    text: `${server.mc.description ?? ""}`
                     color: 'white'
                     font.pixelSize: 16
                     visible: text.length > 0
                 }
 
                 Text {
-                    text: `Players: ${Services.ServerStatus.mc.players?.online ?? ""}/${Services.ServerStatus.mc.players?.max ?? ""}`
-                    color: '#19960e'
+                    text: `Players: ${server.mc.players?.online ?? ""}/${server.mc.players?.max ?? ""}`
+                    color: '#58de4c'
                     font.pixelSize: 12
-                    visible: text.length > 1
+                    visible: text.length > 10
                 }
 
                 Text {
