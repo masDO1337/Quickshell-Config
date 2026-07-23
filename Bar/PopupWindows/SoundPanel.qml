@@ -34,7 +34,7 @@ Tooltip {
             ColumnLayout {
                 Layout.fillWidth: true
                 Layout.margins: 10
-                spacing: 6
+                spacing: 4
 
                 RowLayout {
                     Layout.fillWidth: true
@@ -98,7 +98,7 @@ Tooltip {
             ColumnLayout {
                 Layout.fillWidth: true
                 Layout.margins: 10
-                spacing: 6
+                spacing: 4
 
                 RowLayout {
                     Layout.fillWidth: true
@@ -163,103 +163,91 @@ Tooltip {
                 Layout.margins: 10
                 text: "Playback"
                 color: "white"
-                font.pixelSize: 14
+                font.pixelSize: 13
                 font.bold: true
                 visible: sound.filter.length > 0
             }
 
-            ColumnLayout {
-                Layout.fillWidth: true
-                Layout.leftMargin: 10
-                Layout.rightMargin: 10
-                Layout.bottomMargin: 10
+            Repeater {
+                model: sound.filter
 
-                spacing: 6
+                Item {
+                    id: node
 
-                visible: sound.filter.length > 0
+                    required property int index
+                    required property PwNode modelData
 
-                Repeater {
-                    model: sound.filter
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: nodeColumn.implicitHeight
+                    Layout.margins: 10
 
-                    Rectangle {
-                        id: node
+                    PwObjectTracker { 
+                        objects: [node.modelData]
+                        onObjectsChanged: {
+                            node.modelData = sound.filter[node.index]
+                        }
+                    }
 
-                        required property int index
-                        required property PwNode modelData
+                    ColumnLayout {
+                        id: nodeColumn
+                        anchors.fill: parent
+                        spacing: 4
 
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: nodeColumn.implicitHeight
-                        color: "transparent"
-                        
-                        radius: 4
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 6
 
-                        PwObjectTracker { 
-                            objects: [node.modelData]
-                            onObjectsChanged: {
-                                node.modelData = sound.filter[node.index]
+                            IconImage {
+                                implicitSize: 16
+                                source: {
+                                    const muted = node.modelData.audio?.muted
+                                    const volume = node.modelData.audio?.volume;
+                                    
+                                    if (muted) return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker-xmark.svg"))
+                                    if (volume > 0.66) return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker-wave-2.svg"))
+                                    if (volume > 0.33) return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker-wave-1.svg"))
+                                    return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker.svg"))
+                                }
+                            }
+
+                            Text { 
+                                text: `${node.modelData.description !== "" ? node.modelData.description : node.modelData.name}`
+                                color: "#a6e1f3"
+                                font.pixelSize: 12
+                                font.bold: true
+                            }
+
+                            Text { 
+                                text: `${Math.round(node.modelData.audio?.volume * 100)}%`
+                                color: "#a6e1f3"
+                                font.pixelSize: 12
+                                font.bold: true
+                            }
+
+                            Item { Layout.fillWidth: true }
+
+                            UI.Button {
+                                showIcon: false
+                                showText: true
+                                text: node.modelData.audio.muted ? "unmute" : "mute"
+                                textSize: 12
+                                onClicked: () => {
+                                    node.modelData.audio.muted = !node.modelData.audio.muted
+                                }
                             }
                         }
 
-                        ColumnLayout {
-                            id: nodeColumn
-                            anchors.fill: parent
+                        Item {
+                            Layout.fillWidth: true
+                            implicitHeight: 16
 
-                            RowLayout {
-                                Layout.fillWidth: true
-                                spacing: 6
-
-                                IconImage {
-                                    implicitSize: 16
-                                    source: {
-                                        const muted = node.modelData.audio?.muted
-                                        const volume = node.modelData.audio?.volume;
-                                        
-                                        if (muted) return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker-xmark.svg"))
-                                        if (volume > 0.66) return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker-wave-2.svg"))
-                                        if (volume > 0.33) return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker-wave-1.svg"))
-                                        return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker.svg"))
-                                    }
-                                }
-
-                                Text { 
-                                    text: `${node.modelData.description !== "" ? node.modelData.description : node.modelData.name}`
-                                    color: "#a6e1f3"
-                                    font.pixelSize: 12
-                                    font.bold: true
-                                }
-
-                                Text { 
-                                    text: `${Math.round(node.modelData.audio?.volume * 100)}%`
-                                    color: "#a6e1f3"
-                                    font.pixelSize: 12
-                                    font.bold: true
-                                }
-
-                                Item { Layout.fillWidth: true }
-
-                                UI.Button {
-                                    showIcon: false
-                                    showText: true
-                                    text: node.modelData.audio.muted ? "unmute" : "mute"
-                                    textSize: 12
-                                    onClicked: () => {
-                                        node.modelData.audio.muted = !node.modelData.audio.muted
-                                    }
-                                }
-                            }
-
-                            Item {
-                                Layout.fillWidth: true
-                                implicitHeight: 16
-
-                                UI.Slider {
-                                    from: 0
-                                    to: 1
-                                    value: node.modelData.audio?.volume || 0
-                                    onValueChanged: {
-                                        if (node.modelData.audio) {
-                                            node.modelData.audio.volume = value
-                                        }
+                            UI.Slider {
+                                from: 0
+                                to: 1
+                                value: node.modelData.audio?.volume || 0
+                                onValueChanged: {
+                                    if (node.modelData.audio) {
+                                        node.modelData.audio.volume = value
                                     }
                                 }
                             }
