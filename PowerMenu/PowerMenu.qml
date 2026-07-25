@@ -44,7 +44,7 @@ PanelWindow {
     function off() {
         visible = false
         margins.right = -implicitWidth - 20
-        body.currentIndex = 0
+        body.currentIndex = 1
     }
 
     HyprlandFocusGrab {
@@ -102,7 +102,7 @@ PanelWindow {
     Rectangle {
         id: body
 
-        property int currentIndex: 0
+        property int currentIndex: 1
 
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
