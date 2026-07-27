@@ -17,7 +17,7 @@ Rectangle {
     implicitWidth: row.implicitWidth + 13
     implicitHeight: row.implicitHeight + 13
     radius: 8
-    color: on ? '#487f7f7f' : '#00ffffff'
+    color: on ? '#487f7f7f' : '#48080808'
 
     Behavior on color {
         ColorAnimation { duration: 350; easing.type: Easing.OutCubic }
