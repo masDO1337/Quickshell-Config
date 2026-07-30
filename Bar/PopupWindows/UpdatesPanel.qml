@@ -7,12 +7,6 @@ import "UI" as UI
 
 Tooltip {
     id: root
-    
-    property var onClicked: (name) => {
-        Services.Updates.runUpdate(name)
-        toggle()
-    }
-
     Item {
         anchors.fill: parent
 
@@ -77,7 +71,7 @@ Tooltip {
                     text: "Update All"
                     textSize: 14
 
-                    onClicked: () => root.onClicked("")
+                    onClicked: () => Services.Updates.runUpdate("")
                 }
             }
 
@@ -89,6 +83,8 @@ Tooltip {
 
             ListView {  
                 id: resultsList
+
+                visible: Services.Updates.showUpdates
 
                 model: Services.Updates.packages
 
@@ -178,19 +174,23 @@ Tooltip {
                         anchors.fill: parent
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
-                        onClicked: root.onClicked(delegateRoot.modelData.name)
+                        onClicked: () => {
+                            Services.Updates.runUpdate(delegateRoot.modelData.name)
+                            root.toggle()
+                        }
                         onPositionChanged: resultsList.currentIndex = delegateRoot.index
                     }
 
                 }
+            }
 
-                Text {
-                    anchors.centerIn: parent
-                    text: "No package found"
-                    color: '#828282'
-                    font.pixelSize: 16
-                    visible: resultsList.count === 0
-                }
+            Text {
+                Layout.margins: 10
+                Layout.alignment: Qt.AlignHCenter
+                text: "No package found"
+                color: '#828282'
+                font.pixelSize: 16
+                visible: resultsList.count === 0
             }
         }
     }
