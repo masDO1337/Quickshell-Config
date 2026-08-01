@@ -68,6 +68,7 @@ PanelWindow {
         Blocks.SystemTray {}
         Blocks.Network {}
         Blocks.Bluetooth {}
+        Blocks.Battery {}
         Blocks.Sound { id: sound }
         Blocks.PowerMenu { id: powerMenu }
     }

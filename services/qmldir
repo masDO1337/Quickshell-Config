@@ -5,5 +5,6 @@ singleton AppLauncher 1.0 AppLauncher.qml
 singleton Bluetooth 1.0 Bluetooth.qml
 singleton PowerMenu 1.0 PowerMenu.qml
 singleton Updates 1.0 Updates.qml
+singleton Battery 1.0 Battery.qml
 singleton Polkit 1.0 Polkit.qml
 singleton Iwd 1.0 Iwd.qml
