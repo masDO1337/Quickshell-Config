@@ -33,7 +33,7 @@ Item {
     RowLayout {
         id: row
         anchors.fill: parent
-        spacing: 2
+        spacing: 4
 
         IconImage {
             implicitSize: 16

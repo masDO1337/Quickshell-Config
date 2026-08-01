@@ -10,7 +10,7 @@ Tooltip {
     Item {
         anchors.fill: parent
 
-        implicitWidth: Math.max(column.implicitWidth, 350)
+        implicitWidth: Math.max(column.implicitWidth, 400)
         implicitHeight: column.implicitHeight
 
         ColumnLayout {
@@ -71,7 +71,10 @@ Tooltip {
                     text: "Update All"
                     textSize: 14
 
-                    onClicked: () => Services.Updates.runUpdate("")
+                    onClicked: () => {
+                        Services.Updates.runUpdate("")
+                        root.toggle()
+                    }
                 }
             }
 
@@ -132,8 +135,7 @@ Tooltip {
                         spacing: 0
 
                         RowLayout {
-                            Layout.preferredWidth: 160
-                            Layout.maximumWidth: 160
+                            Layout.preferredWidth: 180
                             spacing: 2
 
                             Text {
@@ -153,7 +155,7 @@ Tooltip {
                         }
   
                         Text {
-                            Layout.preferredWidth: 60
+                            Layout.preferredWidth: 80
                             text: delegateRoot.modelData.old
                             color: resultsList.currentIndex === delegateRoot.index ? "#f3a6a6" : "#828282"
                             font.pixelSize: 12
@@ -161,7 +163,7 @@ Tooltip {
                         }
 
                         Text {
-                            Layout.preferredWidth: 60
+                            Layout.preferredWidth: 80
                             text: delegateRoot.modelData.new
                             color: resultsList.currentIndex === delegateRoot.index ? '#bcf3a6' : "#828282"
                             font.pixelSize: 12
