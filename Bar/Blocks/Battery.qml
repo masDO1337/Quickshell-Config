@@ -15,7 +15,7 @@ Item {
         spacing: 4
 
         IconImage {
-            implicitSize: 16
+            implicitSize: 14
             source: Services.Battery.charging 
                 ? Qt.resolvedUrl(Quickshell.shellPath("Icons/battery-charging.svg")) 
                 : Services.Battery.percentage < 20 
@@ -27,8 +27,6 @@ Item {
 
         Text {
             text: Services.Battery.percentage + "%"
-            Layout.maximumWidth: 600
-            elide: Text.ElideRight
             font.pixelSize: 13
             font.bold: true
             color: "#f3d9a6"
