@@ -10,8 +10,8 @@ Tooltip {
 
     Item {
         anchors.fill: parent
-        implicitWidth: Math.max(380, column.implicitWidth + 20)
-        implicitHeight: column.implicitHeight + 20
+        implicitWidth: Math.max(380, column.implicitWidth)
+        implicitHeight: column.implicitHeight
 
         ColumnLayout {
             id: column
@@ -56,13 +56,13 @@ Tooltip {
                 Layout.fillWidth: true
                 implicitHeight: 1
                 color: '#afafaf'
-                visible: Services.Iwd.deviceFound
+                visible: Services.Bluetooth.enabled
             }
 
             RowLayout {
                 Layout.fillWidth: true
                 Layout.margins: 10
-                visible: Services.Iwd.deviceFound
+                visible: Services.Bluetooth.enabled
 
                 Text {
                     Layout.fillWidth: true
@@ -82,15 +82,6 @@ Tooltip {
                 }
             }
 
-            Text {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignVCenter
-                visible: Services.Bluetooth.available && !Services.Bluetooth.enabled
-                text: "Turn Bluetooth on to see devices"
-                color: "#808080"
-                font.pixelSize: 12
-            }
-
             ListView {
                 id: list
                 Layout.fillWidth: true
@@ -98,7 +89,7 @@ Tooltip {
                 implicitHeight: Math.min(contentHeight, 260)
                 clip: true
 
-                visible: Services.Bluetooth.available && Services.Bluetooth.enabled
+                visible: Services.Bluetooth.enabled
 
                 model: Services.Bluetooth.adapter.devices
 
@@ -237,17 +228,6 @@ Tooltip {
                             onClicked: () => node.modelData.pair()
                         }
                     }
-                }
-
-                Text {
-                    anchors.centerIn: parent
-                    visible: list.count === 0
-                    text: Services.Bluetooth.enabled
-                        ? "No devices found"
-                        : "Bluetooth is turned off"
-                    color: "#888"
-                    font.pixelSize: 12
-                    horizontalAlignment: Text.AlignHCenter
                 }
             }
         }

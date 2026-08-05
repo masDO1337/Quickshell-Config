@@ -9,7 +9,7 @@ import "UI" as UI
 Tooltip {
     Item {
         anchors.fill: parent
-        implicitWidth: Math.max(column.implicitWidth, 360)
+        implicitWidth: Math.max(column.implicitWidth, 380)
         implicitHeight: column.implicitHeight
 
         ColumnLayout {
@@ -48,6 +48,7 @@ Tooltip {
                         showText: true
                         text: "Refresh"
                         textSize: 12
+                        visible: Services.Iwd.powered
 
                         onClicked: () => Services.Iwd.refresh()
                     }
@@ -66,11 +67,13 @@ Tooltip {
                 Layout.fillWidth: true
                 implicitHeight: 1
                 color: '#afafaf'
+                visible: Services.Iwd.powered
             }
 
             RowLayout {
                 Layout.fillWidth: true
                 Layout.margins: 10
+                visible: Services.Iwd.powered
 
                 Text {
                     Layout.fillWidth: true
@@ -96,6 +99,8 @@ Tooltip {
                 Layout.margins: 10
                 implicitHeight: Math.min(contentHeight, 260)
                 clip: true
+
+                visible: Services.Iwd.powered && count !== 0
 
                 model: Services.Iwd.networks
 
@@ -171,17 +176,17 @@ Tooltip {
                         }
                     }
                 }
+            }
 
-                Text {
-                    anchors.centerIn: parent
-                    visible: list.count === 0
-                    text: Services.Iwd.powered
-                        ? "No networks found"
-                        : "WiFi is turned off"
-                    color: "#888"
-                    font.pixelSize: 12
-                    horizontalAlignment: Text.AlignHCenter
-                }
+            Text {
+                Layout.fillWidth: true
+                Layout.margins: 10
+                Layout.topMargin: 0
+                horizontalAlignment: Text.AlignHCenter
+                visible: Services.Iwd.powered && list.count === 0
+                text: "No networks found"
+                color: "#888"
+                font.pixelSize: 12
             }
 
             Rectangle {

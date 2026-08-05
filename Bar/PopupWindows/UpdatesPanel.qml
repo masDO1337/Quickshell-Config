@@ -124,7 +124,7 @@ Tooltip {
                     property string from: modelData.from
 
                     width: resultsList.width
-                    height: 25
+                    height: 30
                     radius: 6
                     color: "transparent"
 
