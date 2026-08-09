@@ -2,12 +2,16 @@ import Quickshell
 import Quickshell.Widgets
 import QtQuick
 import QtQuick.Layouts
-import "../../services" as Services
+import Quickshell.Services.UPower
 
 Item {
     id: root
     Layout.fillHeight: true
     implicitWidth: row.implicitWidth
+    visible: UPower.displayDevice.ready
+
+    property int percentage: UPower.displayDevice.percentage * 100
+    property bool charging: UPower.displayDevice.state === UPowerDeviceState.Charging
 
     RowLayout {
         id: row
@@ -16,21 +20,21 @@ Item {
 
         IconImage {
             implicitSize: 14
-            source: Services.Battery.charging 
-                ? Qt.resolvedUrl(Quickshell.shellPath("Icons/battery-charging.svg")) 
-                : Services.Battery.percentage < 20 
-                ? Qt.resolvedUrl(Quickshell.shellPath("Icons/battery-empty.svg")) 
-                : Services.Battery.percentage < 60 
+            source: root.charging 
+                ? Qt.resolvedUrl(Quickshell.shellPath("Icons/battery-charge.svg")) 
+                : root.percentage < 20 
+                ? Qt.resolvedUrl(Quickshell.shellPath("Icons/battery-empty.svg"))
+                : root.percentage < 60 
                 ? Qt.resolvedUrl(Quickshell.shellPath("Icons/battery-half.svg")) 
                 : Qt.resolvedUrl(Quickshell.shellPath("Icons/battery-full.svg"))
         }
 
         Text {
-            text: Services.Battery.percentage + "%"
+            text: root.percentage + "%"
             font.pixelSize: 13
             font.bold: true
             color: "#f3d9a6"
-            visible: Services.Battery.percentage < 100
+            visible: root.percentage < 100
         }
     }
 }

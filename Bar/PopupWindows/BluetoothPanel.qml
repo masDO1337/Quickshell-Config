@@ -1,12 +1,33 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Bluetooth
-import "../../services" as Services
 import "UI" as UI
 
 Tooltip {
+    id: root
+
+    readonly property BluetoothAdapter adapter: Bluetooth.defaultAdapter
+
+    readonly property bool available: adapter !== null
+    readonly property bool enabled: available && adapter.enabled
+    readonly property bool discovering: available && adapter.discovering
+
+    readonly property string status: {
+        if (!available)
+            return "No Bluetooth adapter"
+
+        if (!enabled)
+            return "Bluetooth off"
+
+        if (discovering)
+            return "Scanning..."
+
+        return adapter.name
+    }
 
     Item {
         anchors.fill: parent
@@ -38,15 +59,15 @@ Tooltip {
                     UI.Button {
                         showIcon: false
                         showText: true
-                        text: Services.Bluetooth.enabled ? "Turn off" : "Turn on"
+                        text: root.enabled ? "Turn off" : "Turn on"
                         textSize: 12
-                        onClicked: () => Services.Bluetooth.toggle()
+                        onClicked: () => root.adapter.enabled = !root.adapter.enabled
                     }
                 }
 
                 Text {
                     Layout.fillWidth: true
-                    text: Services.Bluetooth.statusText
+                    text: root.status
                     color: "#808080"
                     font.pixelSize: 12
                 }
@@ -56,13 +77,13 @@ Tooltip {
                 Layout.fillWidth: true
                 implicitHeight: 1
                 color: '#afafaf'
-                visible: Services.Bluetooth.enabled
+                visible: root.enabled
             }
 
             RowLayout {
                 Layout.fillWidth: true
                 Layout.margins: 10
-                visible: Services.Bluetooth.enabled
+                visible: root.enabled
 
                 Text {
                     Layout.fillWidth: true
@@ -75,10 +96,10 @@ Tooltip {
                 UI.Button {
                     showIcon: false
                     showText: true
-                    text: Services.Bluetooth.discovering ? "Stop" : "Scan"
+                    text: root.adapter.discovering ? "Stop" : "Scan"
                     textSize: 12
 
-                    onClicked: () => Services.Bluetooth.toggleScan()
+                    onClicked: () => root.adapter.discovering = !root.adapter.discovering
                 }
             }
 
@@ -89,9 +110,9 @@ Tooltip {
                 implicitHeight: Math.min(contentHeight, 260)
                 clip: true
 
-                visible: Services.Bluetooth.enabled
+                visible: root.enabled
 
-                model: Services.Bluetooth.adapter.devices
+                model: root.adapter.devices
 
                 highlight: Rectangle {
                     radius: 8
@@ -124,7 +145,7 @@ Tooltip {
                         anchors.fill: parent
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
-                        onClicked: Services.Bluetooth.toggleDevice(node.modelData)
+                        onClicked: () => node.modelData.connected = !node.modelData.connected
                         onPositionChanged: list.currentIndex = node.index
                     }
 
@@ -138,12 +159,12 @@ Tooltip {
                             width: 28
                             height: 28
                             Layout.alignment: Qt.AlignVCenter
-                            visible: Quickshell.iconPath(node.modelData.icon ?? "", true) !== ""
+                            visible: Quickshell.iconPath(node.modelData?.icon ?? "", true) !== ""
 
                             IconImage {
                                 anchors.fill: parent
                                 implicitSize: 28
-                                source: Quickshell.iconPath(node.modelData.icon ?? "", true)
+                                source: Quickshell.iconPath(node.modelData?.icon ?? "", true)
                             }
                         }
 
@@ -153,8 +174,8 @@ Tooltip {
 
                             Text {
                                 Layout.fillWidth: true
-                                text: node.modelData.name || node.modelData.deviceName || node.modelData.address || "Unknown"
-                                color: node.modelData.connected ?? false
+                                text: node.modelData?.name || node.modelData?.deviceName || node.modelData?.address || "Unknown"
+                                color: node.modelData?.connected ?? false
                                     ? "#a6f3b0"
                                     : list.currentIndex === node.index 
                                     ? "white"
@@ -164,7 +185,7 @@ Tooltip {
                             }
 
                             Text {
-                                text: BluetoothDeviceState.toString(node.modelData.state ?? BluetoothDeviceState.Disconnected)
+                                text: BluetoothDeviceState.toString(node.modelData?.state ?? BluetoothDeviceState.Disconnected)
                                 color: "#808080"
                                 font.pixelSize: 11
                                 elide: Text.ElideRight
@@ -174,26 +195,26 @@ Tooltip {
                         // Battery indicator
                         Item {
                             implicitWidth: batteryRow.implicitWidth
-                            visible: node.modelData.batteryAvailable ?? false
+                            visible: node.modelData?.batteryAvailable ?? false
                             RowLayout {
                                 id: batteryRow
                                 anchors.centerIn: parent
                                 spacing: 4
 
                                 IconImage {
+                                    implicitSize: 16
                                     source: {
-                                        if (node.modelData.battery < 0.3)
+                                        if (node.modelData?.battery < 0.3)
                                             return Qt.resolvedUrl(Quickshell.shellPath("Icons/battery-empty.svg"))
-                                        else if (node.modelData.battery < 0.6)
+                                        else if (node.modelData?.battery < 0.6)
                                             return Qt.resolvedUrl(Quickshell.shellPath("Icons/battery-half.svg"))
                                         else
                                             return Qt.resolvedUrl(Quickshell.shellPath("Icons/battery-full.svg"))
                                     }
-                                    implicitSize: 16
                                 }
 
                                 Text {
-                                    text: Math.round(node.modelData.battery * 100) + "%"
+                                    text: Math.round(node.modelData?.battery * 100) + "%"
                                     color: "#bfbfbf"
                                     font.pixelSize: 12
                                 }
@@ -203,16 +224,16 @@ Tooltip {
                         UI.Button {
                             showIcon: false
                             showText: true
-                            text: node.modelData.trusted ? "Untrust" : "Trust"
+                            text: node.modelData?.trusted ? "Untrust" : "Trust"
                             textSize: 12
-                            visible: node.modelData.paired ?? false
+                            visible: node.modelData?.paired ?? false
 
                             onClicked: () => node.modelData.trusted = !node.modelData.trusted
                         }
 
                         UI.Button {
                             source: Qt.resolvedUrl(Quickshell.shellPath("Icons/trash.svg"))
-                            visible: node.modelData.paired ?? false
+                            visible: node.modelData?.paired ?? false
 
                             onClicked: () => node.modelData.forget()
                         }
@@ -223,7 +244,7 @@ Tooltip {
                             text: "Pair"
                             textSize: 12
                             textBold: true
-                            visible: !node.modelData.paired ?? false
+                            visible: !node.modelData?.paired ?? false
 
                             onClicked: () => node.modelData.pair()
                         }
