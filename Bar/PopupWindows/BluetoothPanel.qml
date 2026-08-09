@@ -39,14 +39,14 @@ Tooltip {
             anchors.fill: parent
             spacing: 0
 
-            ColumnLayout {
+            RowLayout {
                 Layout.fillWidth: true
                 Layout.margins: 10
-                spacing: 6
+                spacing: 0
 
-                RowLayout {
-                    width: parent.width
-                    spacing: 8
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: 6
 
                     Text {
                         Layout.fillWidth: true
@@ -56,20 +56,20 @@ Tooltip {
                         font.bold: true
                     }
 
-                    UI.Button {
-                        showIcon: false
-                        showText: true
-                        text: root.enabled ? "Turn off" : "Turn on"
-                        textSize: 12
-                        onClicked: () => root.adapter.enabled = !root.adapter.enabled
+                    Text {
+                        Layout.fillWidth: true
+                        text: root.status
+                        color: "#808080"
+                        font.pixelSize: 12
                     }
                 }
 
-                Text {
-                    Layout.fillWidth: true
-                    text: root.status
-                    color: "#808080"
-                    font.pixelSize: 12
+                UI.Button {
+                    showIcon: false
+                    showText: true
+                    text: root.enabled ? "Turn off" : "Turn on"
+                    textSize: 12
+                    onClicked: () => root.adapter.enabled = !root.adapter.enabled
                 }
             }
 

@@ -4,9 +4,6 @@ import Quickshell.Widgets
 
 Rectangle {
     id: root
-    
-    property int spaseWidth: 8
-    property int spaseHeight: 8
 
     property bool showIcon: true
     property url source: ""
@@ -16,13 +13,15 @@ Rectangle {
     property string text: ""
     property string textColor: "white"
 
+    property alias rowLayout: row
+    
     property alias mouse: m
     property var acceptedButtons: Qt.LeftButton
     property var onClicked: (event) => {}
     property var onWheel: (event) => {}
 
-    implicitWidth: row.implicitWidth + spaseWidth
-    implicitHeight: row.implicitHeight + spaseHeight
+    implicitWidth: row.implicitWidth + 8
+    implicitHeight: row.implicitHeight + 8
     radius: 6
     color: m.containsMouse ? '#707f7f7f' : '#00ffffff'
 

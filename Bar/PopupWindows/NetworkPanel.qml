@@ -17,14 +17,14 @@ Tooltip {
             anchors.fill: parent
             spacing: 0
 
-            ColumnLayout {
+            RowLayout {
                 Layout.fillWidth: true
                 Layout.margins: 10
                 spacing: 6
 
-                RowLayout {
+                ColumnLayout {
                     Layout.fillWidth: true
-                    spacing: 8
+                    spacing: 6
 
                     Text {
                         Layout.fillWidth: true
@@ -34,32 +34,32 @@ Tooltip {
                         font.bold: true
                     }
 
-                    UI.Button {
-                        showIcon: false
-                        showText: true
-                        text: Services.Iwd.powered ? "Turn off" : "Turn on"
-                        textSize: 12
-
-                        onClicked: () => Services.Iwd.setPowered(!Services.Iwd.powered)
-                    }
-
-                    UI.Button {
-                        showIcon: false
-                        showText: true
-                        text: "Refresh"
-                        textSize: 12
-                        visible: Services.Iwd.powered
-
-                        onClicked: () => Services.Iwd.refresh()
+                    Text {
+                        Layout.fillWidth: true
+                        text: Services.Iwd.statusText
+                        color: "#808080"
+                        font.pixelSize: 12
+                        elide: Text.ElideRight
                     }
                 }
 
-                Text {
-                    Layout.fillWidth: true
-                    text: Services.Iwd.statusText
-                    color: "#808080"
-                    font.pixelSize: 12
-                    elide: Text.ElideRight
+                UI.Button {
+                    showIcon: false
+                    showText: true
+                    text: Services.Iwd.powered ? "Turn off" : "Turn on"
+                    textSize: 12
+
+                    onClicked: () => Services.Iwd.setPowered(!Services.Iwd.powered)
+                }
+
+                UI.Button {
+                    showIcon: false
+                    showText: true
+                    text: "Refresh"
+                    textSize: 12
+                    visible: Services.Iwd.powered
+
+                    onClicked: () => Services.Iwd.refresh()
                 }
             }
 

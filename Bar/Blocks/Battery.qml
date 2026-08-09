@@ -7,6 +7,8 @@ import Quickshell.Services.UPower
 Item {
     id: root
     Layout.fillHeight: true
+    Layout.leftMargin: 4
+    Layout.rightMargin: 4
     implicitWidth: row.implicitWidth
     visible: UPower.displayDevice.ready
 

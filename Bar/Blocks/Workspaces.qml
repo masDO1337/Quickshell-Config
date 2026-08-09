@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell.Hyprland
-import "UI" as UI
 
 Rectangle {
     Layout.fillHeight: true
@@ -20,15 +19,16 @@ Rectangle {
         Repeater {
             model: Hyprland.workspaces
             
-            UI.Button {
+            Rectangle {
                 id: workspace
 
                 required property HyprlandWorkspace modelData
                 required property int index
 
-                spaseWidth: 16
+                Layout.preferredHeight: text.implicitHeight + 8
+                Layout.preferredWidth: text.implicitWidth > text.implicitHeight ? text.implicitWidth + 16 : text.implicitHeight + 8
 
-                color: modelData.urgent ? "#f3a6a6" : mouse.containsMouse ? "#828282" : '#00ffffff'
+                color: modelData.urgent ? "#f3a6a6" : m.containsMouse ? "#828282" : '#00ffffff'
 
                 SequentialAnimation on opacity {
                     running: workspace.modelData.urgent
@@ -47,16 +47,26 @@ Rectangle {
                     }
                 }
 
-                showIcon: false
-                showText: true
-                text: modelData.id <= 0 ? modelData.name.split("special:")[1] : modelData.name
-                textColor: modelData.focused ? "#f3a6a6" : mouse.containsMouse || modelData.urgent ? "#1e1e1e" : "#828282"
-
-                onClicked: () => {
-                    if (modelData.id <= 0) {
-                        Hyprland.dispatch("hl.dsp.workspace.toggle_special('" + modelData.name.split("special:")[1] + "')")
+                MouseArea {
+                    id: m
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: () => {
+                        if (workspace.modelData.id <= 0) {
+                            Hyprland.dispatch("hl.dsp.workspace.toggle_special('" + workspace.modelData.name.split("special:")[1] + "')")
+                        }
+                        else Hyprland.dispatch("hl.dsp.focus({ workspace = " + workspace.modelData.name + " })")
                     }
-                    else Hyprland.dispatch("hl.dsp.focus({ workspace = " + modelData.name + " })")
+                }
+
+                Text {
+                    id: text
+                    anchors.centerIn: parent
+                    font.pixelSize: 13
+                    font.bold: true
+                    text: workspace.modelData.id <= 0 ? workspace.modelData.name.split("special:")[1] : workspace.modelData.name
+                    color: workspace.modelData.focused ? "#f3a6a6" : m.containsMouse || workspace.modelData.urgent ? "#1e1e1e" : "#828282"
                 }
             }
         }

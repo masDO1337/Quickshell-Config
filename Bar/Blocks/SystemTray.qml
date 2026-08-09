@@ -19,9 +19,6 @@ Repeater {
             id: box
             anchors.centerIn: parent
 
-            spaseWidth: 6
-            spaseHeight: 6
-
             source: Qt.resolvedUrl(node.modelData.icon)
             iconSize: 16
 
