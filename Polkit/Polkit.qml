@@ -105,6 +105,10 @@ PanelWindow {
                         : TextInput.Normal
 
                     text: modelData.value ?? ""
+                    inputFocus: modelData.focus ?? false
+                    onInputFocusChanged: {
+                        modelData.focus = inputFocus
+                    }
                     onTextChanged: {
                         modelData.value = text
                     }

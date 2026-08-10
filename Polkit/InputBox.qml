@@ -4,6 +4,7 @@ import QtQuick.Layouts
 Rectangle {
     id: root
     property alias text: input.text
+    property alias inputFocus: input.focus
     property var echoMode: TextInput.Normal
     property string inputPrompt: "Input"
     property var onReturnPressed: null
@@ -38,7 +39,6 @@ Rectangle {
             font.pixelSize: 16
             echoMode: root.echoMode
             clip: true
-            focus: true
 
             Keys.onReturnPressed: root.onReturnPressed()
         }

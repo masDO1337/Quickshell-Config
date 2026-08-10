@@ -24,10 +24,7 @@ Singleton {
         property string prompt: "Input "
         property string value: ""
         property bool isPassword: false
-
-        function changeValue(newValue) {
-            value = newValue
-        }
+        property bool focus: true
     }
 
     property Input flowInput: Input {
@@ -90,6 +87,7 @@ Singleton {
         } else if (flow) {
             if (value === "") value = inputs[0].value
             flow.submit(value)
+            flowInput.value = ""
         }
     }
 
