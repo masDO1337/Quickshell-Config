@@ -89,7 +89,7 @@ Tooltip {
                     Layout.fillWidth: true
                     text: "Devices"
                     color: "white"
-                    font.pixelSize: 13
+                    font.pixelSize: 14
                     font.bold: true
                 }
 

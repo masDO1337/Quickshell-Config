@@ -79,7 +79,7 @@ Tooltip {
                     Layout.fillWidth: true
                     text: "Networks"
                     color: "white"
-                    font.pixelSize: 13
+                    font.pixelSize: 14
                     font.bold: true
                 }
 

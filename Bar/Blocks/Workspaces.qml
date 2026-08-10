@@ -22,8 +22,8 @@ Rectangle {
             Rectangle {
                 id: workspace
 
-                required property HyprlandWorkspace modelData
                 required property int index
+                required property HyprlandWorkspace modelData
 
                 Layout.preferredHeight: text.implicitHeight + 8
                 Layout.preferredWidth: text.implicitWidth > text.implicitHeight ? text.implicitWidth + 16 : text.implicitHeight + 8
@@ -53,9 +53,7 @@ Rectangle {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked: () => {
-                        if (workspace.modelData.id <= 0) {
-                            Hyprland.dispatch("hl.dsp.workspace.toggle_special('" + workspace.modelData.name.split("special:")[1] + "')")
-                        }
+                        if (workspace.modelData.id <= 0) Hyprland.dispatch("hl.dsp.workspace.toggle_special('" + workspace.modelData.name.split("special:")[1] + "')")
                         else Hyprland.dispatch("hl.dsp.focus({ workspace = " + workspace.modelData.name + " })")
                     }
                 }

@@ -8,7 +8,7 @@ import "UI" as UI
 Tooltip {
     Item {
         id: root
-        implicitWidth: Math.max(280, mainColumn.implicitWidth)
+        implicitWidth: Math.max(320, mainColumn.implicitWidth)
         implicitHeight: mainColumn.implicitHeight
 
         property var mc: Services.ServerStatus.mc
@@ -17,24 +17,40 @@ Tooltip {
             id: mainColumn
             anchors.fill: parent
             spacing: 0
-
+            
             RowLayout {
                 Layout.fillWidth: true
                 Layout.margins: 10
-                spacing: 4
+                spacing: 6
 
-                Text {
-                    text: "Server"
-                    color: "white"
-                    font.pixelSize: 16
-                    font.bold: true
-                }
-
-                Text {
+                ColumnLayout {
                     Layout.fillWidth: true
-                    text: `${Services.ServerStatus.host ?? ""}:${Services.ServerStatus.port ?? ""}`
-                    color: "#808080"
-                    font.pixelSize: 12
+                    spacing: 6
+
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: 4
+
+                        Text {
+                            text: "Server"
+                            color: "white"
+                            font.pixelSize: 16
+                            font.bold: true
+                        }
+
+                        Text {
+                            Layout.fillWidth: true
+                            text: `${Services.ServerStatus.host ?? ""}:${Services.ServerStatus.port ?? ""}`
+                            color: "#808080"
+                            font.pixelSize: 12
+                        }
+                    }
+
+                    Text {
+                        text: `${Services.ServerStatus.status}`
+                        color: "#808080"
+                        font.pixelSize: 12
+                    }
                 }
 
                 UI.Button {
@@ -53,27 +69,6 @@ Tooltip {
                     textSize: 12
 
                     onClicked: () => Services.ServerStatus.check()
-                }
-            }
-
-            ColumnLayout {
-                Layout.fillWidth: true
-                Layout.leftMargin: 10
-                Layout.rightMargin: 10
-                Layout.bottomMargin: 10
-                spacing: 6
-
-                Text {
-                    text: `${Services.ServerStatus.status}`
-                    color: "#808080"
-                    font.pixelSize: 12
-                }
-
-                Text {
-                    text: `Lateney: ${Services.ServerStatus.latency} ms`
-                    color: "#808080"
-                    font.pixelSize: 12
-                    visible: Services.ServerStatus.latency >= 0
                 }
             }
 
@@ -240,6 +235,13 @@ Tooltip {
                     text: `Last checked: ${Qt.formatDateTime(Services.ServerStatus.lastChecked, "hh : mm")}`
                     color: "#808080"
                     font.pixelSize: 12
+                }
+
+                Text {
+                    text: `Lateney: ${Services.ServerStatus.latency} ms`
+                    color: "#808080"
+                    font.pixelSize: 12
+                    visible: Services.ServerStatus.latency >= 0
                 }
             }
         }

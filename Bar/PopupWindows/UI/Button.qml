@@ -14,18 +14,16 @@ Rectangle {
     property string text: ""
     property string textColor: "white"
     property int textSize: 16 
-    property bool textBold: false
-    
-    property int space: 14
+    property bool textBold: true
 
     property alias mouse: m
     property var acceptedButtons: Qt.LeftButton
     property var onClicked: (event) => {}
 
-    implicitWidth: row.implicitWidth + space
-    implicitHeight: row.implicitHeight + space
+    implicitWidth: row.implicitWidth + 16
+    implicitHeight: row.implicitHeight + 12
     radius: 6
-    color: m.containsMouse ? '#487f7f7f' : '#48080808'
+    color: m.containsMouse ? '#707f7f7f' : "transparent"
 
     Behavior on color {
         ColorAnimation { duration: 350; easing.type: Easing.OutCubic }

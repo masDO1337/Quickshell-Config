@@ -9,7 +9,7 @@ Rectangle {
     implicitWidth: t.implicitWidth + 14
     implicitHeight: t.implicitHeight + 14
     radius: 8
-    color: mouse.containsMouse && root.enabled ? '#487f7f7f' : '#00ffffff'
+    color: mouse.containsMouse && root.enabled ? '#707f7f7f' : "transparent"
 
     Behavior on color {
         ColorAnimation { duration: 350; easing.type: Easing.OutCubic }

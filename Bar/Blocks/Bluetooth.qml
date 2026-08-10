@@ -15,7 +15,7 @@ Item {
         id: box
         anchors.centerIn: parent
 
-        source: Bluetooth.defaultAdapter.enabled ? Qt.resolvedUrl(Quickshell.shellPath("Icons/bluetooth.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/bluetooth-off.svg"))
+        source: Bluetooth.defaultAdapter?.enabled ? Qt.resolvedUrl(Quickshell.shellPath("Icons/bluetooth.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/bluetooth-off.svg"))
 
         onClicked: () => panel.toggle()
     }

@@ -11,8 +11,8 @@ Rectangle {
     Layout.fillWidth: true
     Layout.preferredHeight: row.implicitHeight + 20
     radius: 10
-    color: 'transparent'
-    border.color: input.activeFocus ? '#3a3a3a' : 'transparent'
+    color: input.activeFocus ? "#1e1e1e" : 'transparent'
+    border.color: '#1e1e1e'
     border.width: 1
 
     Behavior on border.color {
@@ -39,15 +39,6 @@ Rectangle {
             echoMode: root.echoMode
             clip: true
             focus: true
-
-            Text {
-                anchors.fill: parent
-                text: "Type..."
-                color: '#828282'
-                font.pixelSize: 16
-                visible: !parent.text
-                verticalAlignment: Text.AlignVCenter
-            }
 
             Keys.onReturnPressed: root.onReturnPressed()
         }
