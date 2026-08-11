@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -25,7 +27,7 @@ Repeater {
             acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
             onClicked: event => {
                 if (event.button == Qt.LeftButton) {
-                    menuAnchor.open();
+                    menu.toggle();
                 } else if (event.button == Qt.MiddleButton) {
                     node.modelData.secondaryActivate();
                 } else if (event.button == Qt.RightButton) {
@@ -39,41 +41,10 @@ Repeater {
             }
         }
 
-        QsMenuAnchor {
-            id: menuAnchor
-            menu: node.modelData.menu
-
-            anchor.window: node.QsWindow.window
-            anchor.adjustment: PopupAdjustment.Flip
-
-            anchor.onAnchoring: {
-                const window = node.QsWindow.window;
-                const widgetRect = window.contentItem.mapFromItem(node, 0, node.height, node.width, node.height);
-
-                menuAnchor.anchor.rect = widgetRect;
-            }
-        }
-
-        Tooltip {
+        SystemTrayPanel {
+            id: menu
             parentItem: node
-
-            hover: box.mouse.containsMouse
-
-            Item {
-                anchors.fill: parent
-                implicitWidth: t.implicitWidth + 20
-                implicitHeight: t.implicitHeight + 20
-
-                Text {
-                    id: t
-                    anchors.centerIn: parent
-                    
-                    text: modelData.title || modelData.id
-                    color: "#fff"
-                    font.pixelSize: 13
-                    font.bold: true
-                }
-            }
+            data: node.modelData
         }
     }
 }
