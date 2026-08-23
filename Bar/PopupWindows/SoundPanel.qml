@@ -11,7 +11,7 @@ Tooltip {
     Item {
         id: sound
         anchors.centerIn: parent
-        implicitWidth: column.implicitWidth
+        implicitWidth: Math.max(380, column.implicitWidth)
         implicitHeight: column.implicitHeight
 
         property PwNode sink: Pipewire.defaultAudioSink
@@ -28,13 +28,23 @@ Tooltip {
 
         ColumnLayout {
             id: column
-            anchors.fill: parent
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
             spacing: 4
 
             ColumnLayout {
                 Layout.fillWidth: true
-                Layout.margins: 10
+                Layout.margins: 20
                 spacing: 4
+
+                Text {
+                    Layout.fillWidth: true
+                    text: "Default Audio Output"
+                    color: "white"
+                    font.pixelSize: 13
+                    font.bold: true
+                }
 
                 RowLayout {
                     Layout.fillWidth: true
@@ -97,8 +107,16 @@ Tooltip {
 
             ColumnLayout {
                 Layout.fillWidth: true
-                Layout.margins: 10
+                Layout.margins: 20
                 spacing: 4
+                
+                Text {
+                    Layout.fillWidth: true
+                    text: "Default Audio Input"
+                    color: "white"
+                    font.pixelSize: 13
+                    font.bold: true
+                }
 
                 RowLayout {
                     Layout.fillWidth: true
@@ -160,7 +178,8 @@ Tooltip {
 
             Text {
                 Layout.fillWidth: true
-                Layout.margins: 10
+                Layout.margins: 20
+                Layout.bottomMargin: 0
                 text: "Playback"
                 color: "white"
                 font.pixelSize: 13
@@ -179,7 +198,7 @@ Tooltip {
 
                     Layout.fillWidth: true
                     Layout.preferredHeight: nodeColumn.implicitHeight
-                    Layout.margins: 10
+                    Layout.margins: 20
 
                     PwObjectTracker { 
                         objects: [node.modelData]

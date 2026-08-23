@@ -22,7 +22,6 @@ Repeater {
             anchors.centerIn: parent
 
             source: Qt.resolvedUrl(node.modelData.icon)
-            iconSize: 16
 
             acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
             onClicked: event => {

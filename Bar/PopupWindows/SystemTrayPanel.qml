@@ -18,7 +18,9 @@ Tooltip {
 
         ColumnLayout {
             id: column
-            anchors.fill: parent
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
             spacing: 0
 
             RowLayout {
@@ -27,7 +29,7 @@ Tooltip {
                 spacing: 10
 
                 IconImage {
-                    implicitSize: 24
+                    implicitSize: 32
                     source: root.data.icon
                     visible: root.data.icon != ""
                 }
@@ -81,7 +83,7 @@ Tooltip {
                     required property QsMenuEntry modelData
 
                     Layout.fillWidth: true
-                    Layout.preferredHeight: modelData.isSeparator ? 1 : row.implicitHeight + 12
+                    Layout.preferredHeight: modelData.isSeparator ? 1 : row.implicitHeight + 16
                     color: modelData.isSeparator ? '#afafaf' : m.containsMouse ? '#707f7f7f' : "transparent"
 
                     Behavior on color {
@@ -91,17 +93,18 @@ Tooltip {
                     RowLayout {
                         id: row
                         anchors.fill: parent
-                        anchors.margins: 6
+                        anchors.margins: 8
+                        anchors.leftMargin: 12
                         spacing: 4
                         visible: !item.modelData.isSeparator
 
                         IconImage {
                             implicitSize: 16
-                            source: item.modelData.icon
-                            visible: item.modelData.icon != ""
+                            source: item.modelData.icon || Qt.resolvedUrl(Quickshell.shellPath("Icons/dot-circle.svg"))
                         }
 
                         Text {
+                            Layout.fillWidth: true
                             text: item.modelData.text
                             color: "#fff"
                             font.pixelSize: 12

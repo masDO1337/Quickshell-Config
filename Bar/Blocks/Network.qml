@@ -74,8 +74,7 @@ Item {
 
         source: root.iconsSource[root.netType]
 
-        showText: root.netType === 2 && Services.Iwd.connected
-        text: Services.Iwd.connectedNetwork
+        text: root.netType === 2 && Services.Iwd.connected ? Services.Iwd.connectedNetwork : ""
         textColor:"#a6f3b0"
 
         onClicked: () => { if (Services.Iwd.deviceFound) networkPanel.toggle() }

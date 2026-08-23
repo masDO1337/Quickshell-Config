@@ -9,17 +9,19 @@ import "UI" as UI
 Tooltip {
     Item {
         anchors.fill: parent
-        implicitWidth: Math.max(column.implicitWidth, 380)
+        implicitWidth: Math.max(380, column.implicitWidth)
         implicitHeight: column.implicitHeight
 
         ColumnLayout {
             id: column
-            anchors.fill: parent
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
             spacing: 0
 
             RowLayout {
                 Layout.fillWidth: true
-                Layout.margins: 10
+                Layout.margins: 20
                 spacing: 6
 
                 ColumnLayout {
@@ -44,22 +46,17 @@ Tooltip {
                 }
 
                 UI.Button {
-                    showIcon: false
-                    showText: true
-                    text: Services.Iwd.powered ? "Turn off" : "Turn on"
-                    textSize: 12
-
-                    onClicked: () => Services.Iwd.setPowered(!Services.Iwd.powered)
-                }
-
-                UI.Button {
-                    showIcon: false
-                    showText: true
-                    text: "Refresh"
-                    textSize: 12
+                    source: Qt.resolvedUrl(Quickshell.shellPath("Icons/refresh.svg"))
+                    iconSize: 16
                     visible: Services.Iwd.powered
 
                     onClicked: () => Services.Iwd.refresh()
+                }
+
+                UI.Toggle {
+                    acceptedButtons: Qt.LeftButton
+                    onClicked: () => Services.Iwd.setPowered(!Services.Iwd.powered)
+                    checked: Services.Iwd.powered
                 }
             }
 
@@ -72,7 +69,7 @@ Tooltip {
 
             RowLayout {
                 Layout.fillWidth: true
-                Layout.margins: 10
+                Layout.margins: 20
                 visible: Services.Iwd.powered
 
                 Text {
@@ -96,7 +93,8 @@ Tooltip {
             ListView {
                 id: list
                 Layout.fillWidth: true
-                Layout.margins: 10
+                Layout.margins: 20
+                Layout.topMargin: 0
                 implicitHeight: Math.min(contentHeight, 260)
                 clip: true
 
@@ -180,7 +178,7 @@ Tooltip {
 
             Text {
                 Layout.fillWidth: true
-                Layout.margins: 10
+                Layout.margins: 20
                 Layout.topMargin: 0
                 horizontalAlignment: Text.AlignHCenter
                 visible: Services.Iwd.powered && list.count === 0
@@ -191,7 +189,8 @@ Tooltip {
 
             Rectangle {
                 Layout.fillWidth: true
-                Layout.margins: 10
+                Layout.margins: 20
+                Layout.topMargin: 0
                 implicitHeight: 32
                 radius: 6
                 color: disconnectMouse.containsMouse ? "#7f4f4f" : "#5a3535"

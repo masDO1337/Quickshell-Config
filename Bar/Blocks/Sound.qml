@@ -39,7 +39,6 @@ Item {
             return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker.svg"))
         }
 
-        showText: true
         text: `${Math.round(root.sink?.audio?.volume * 100)}%`
         textColor: "#a6e1f3"
 

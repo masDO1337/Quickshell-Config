@@ -36,12 +36,14 @@ Tooltip {
 
         ColumnLayout {
             id: column
-            anchors.fill: parent
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
             spacing: 0
 
             RowLayout {
                 Layout.fillWidth: true
-                Layout.margins: 10
+                Layout.margins: 20
                 spacing: 0
 
                 ColumnLayout {
@@ -64,12 +66,10 @@ Tooltip {
                     }
                 }
 
-                UI.Button {
-                    showIcon: false
-                    showText: true
-                    text: root.enabled ? "Turn off" : "Turn on"
-                    textSize: 12
+                UI.Toggle {
+                    acceptedButtons: Qt.LeftButton
                     onClicked: () => root.adapter.enabled = !root.adapter.enabled
+                    checked: root.enabled
                 }
             }
 
@@ -82,7 +82,7 @@ Tooltip {
 
             RowLayout {
                 Layout.fillWidth: true
-                Layout.margins: 10
+                Layout.margins: 20
                 visible: root.enabled
 
                 Text {
@@ -106,11 +106,12 @@ Tooltip {
             ListView {
                 id: list
                 Layout.fillWidth: true
-                Layout.margins: 10
+                Layout.margins: 20
+                Layout.topMargin: 0
                 implicitHeight: Math.min(contentHeight, 260)
                 clip: true
 
-                visible: root.enabled
+                visible: root.enabled && count !== 0
 
                 model: root.adapter.devices
 
@@ -250,6 +251,17 @@ Tooltip {
                         }
                     }
                 }
+            }
+
+            Text {
+                Layout.fillWidth: true
+                Layout.margins: 20
+                Layout.topMargin: 0
+                horizontalAlignment: Text.AlignHCenter
+                visible: root.enabled && list.count === 0
+                text: "No devices found"
+                color: "#888"
+                font.pixelSize: 12
             }
         }
     }

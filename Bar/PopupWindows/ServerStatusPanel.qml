@@ -1,3 +1,4 @@
+import Quickshell
 import Quickshell.Widgets
 import QtQuick
 import QtQuick.Layouts
@@ -63,11 +64,8 @@ Tooltip {
                 }
 
                 UI.Button {
-                    showIcon: false
-                    showText: true
-                    text: "Refresh"
-                    textSize: 12
-
+                    source: Qt.resolvedUrl(Quickshell.shellPath("Icons/refresh.svg"))
+                    iconSize: 16
                     onClicked: () => Services.ServerStatus.check()
                 }
             }

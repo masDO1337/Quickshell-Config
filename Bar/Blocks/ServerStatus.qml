@@ -16,9 +16,6 @@ Item {
 
         source: Services.ServerStatus.serverOn ? Qt.resolvedUrl(Quickshell.shellPath("Icons/server-white.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/server.svg"))
 
-        showText: false
-        text: ""
-
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         onClicked: (event) => {
             if (event.button == Qt.LeftButton) {

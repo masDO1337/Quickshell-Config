@@ -28,7 +28,11 @@ Rectangle {
                 Layout.preferredHeight: text.implicitHeight + 8
                 Layout.preferredWidth: text.implicitWidth > text.implicitHeight ? text.implicitWidth + 16 : text.implicitHeight + 8
 
-                color: modelData.urgent ? "#f3a6a6" : m.containsMouse ? "#828282" : '#00ffffff'
+                color: modelData.urgent ? "#f3a6a6" : m.containsMouse ? "#707f7f7f" : '#00ffffff'
+
+                Behavior on color {
+                    ColorAnimation { duration: 350; easing.type: Easing.OutCubic }
+                }
 
                 SequentialAnimation on opacity {
                     running: workspace.modelData.urgent

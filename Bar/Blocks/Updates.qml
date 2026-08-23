@@ -16,8 +16,7 @@ Item {
 
         source: Services.Updates.showUpdates ? Qt.resolvedUrl(Quickshell.shellPath("Icons/update.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/up-to-date.svg"))
 
-        showText: Services.Updates.checking || Services.Updates.showUpdates
-        text: Services.Updates.checking ? "Checking" : Services.Updates.packages.count.toString()
+        text: Services.Updates.checking ? "Checking" : Services.Updates.showUpdates ? Services.Updates.packages.count.toString() : ""
         textColor: "#f3a6a6"
 
         acceptedButtons: Qt.LeftButton | Qt.RightButton

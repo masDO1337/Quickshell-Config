@@ -22,7 +22,6 @@ Item {
 
         source: root.showDate ? Qt.resolvedUrl(Quickshell.shellPath("Icons/calendar.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/clock-circle.svg"))
 
-        showText: true
         text: root.showDate ? Qt.formatDateTime(systemClock.date, "dd / MM / yyyy") : Qt.formatDateTime(systemClock.date, "hh : mm")
         textColor: "#f3a6a6"
 
