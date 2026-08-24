@@ -15,13 +15,16 @@ Tooltip {
 
         ColumnLayout {
             id: column
-            anchors.fill: parent
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
             spacing: 0
 
             RowLayout {
                 id: row
                 Layout.alignment: Qt.AlignHCenter
-                Layout.margins: 10
+                Layout.margins: 20
+                Layout.fillWidth: true
                 spacing: 20
 
                 RowLayout {
@@ -65,9 +68,7 @@ Tooltip {
                     id: update
                     Layout.alignment: Qt.AlignRight
                     visible: Services.Updates.showUpdates
-
-                    showIcon: false
-                    showText: true
+                    
                     text: "Update All"
                     textSize: 14
 
@@ -92,7 +93,7 @@ Tooltip {
                 model: Services.Updates.packages
 
                 Layout.fillWidth: true
-                Layout.margins: 10
+                Layout.margins: 20
                 implicitHeight: Math.min(contentHeight, 600)
 
                 clip: true

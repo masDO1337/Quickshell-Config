@@ -5,10 +5,7 @@ import Quickshell.Widgets
 Rectangle {
     id: root
 
-    property bool showText: false
-    property bool showIcon: true
-
-    property url source: ""
+    property string source: ""
     property int iconSize: 16
     
     property string text: ""
@@ -37,7 +34,7 @@ Rectangle {
         IconImage {
             implicitSize: root.iconSize
             source: root.source
-            visible: root.showIcon
+            visible: root.source.length > 0
         }
 
         Text {
@@ -45,7 +42,7 @@ Rectangle {
             color: root.textColor
             font.pixelSize: root.textSize
             font.bold: root.textBold
-            visible: root.showText
+            visible: root.text.length > 0
         }
     }
 

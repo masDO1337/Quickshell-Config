@@ -58,7 +58,7 @@ Tooltip {
 
             RowLayout {
                 Layout.fillWidth: true
-                Layout.margins: 10
+                Layout.margins: 20
                 spacing: 8
 
                 UI.Button {
@@ -89,7 +89,7 @@ Tooltip {
 
             GridLayout {
                 Layout.fillWidth: true
-                Layout.margins: 10
+                Layout.margins: 20
                 columns: 7
                 rowSpacing: 4
                 columnSpacing: 4
@@ -114,9 +114,9 @@ Tooltip {
 
             GridLayout {
                 Layout.fillWidth: true
-                Layout.leftMargin: 10
-                Layout.rightMargin: 10
-                Layout.bottomMargin: 10
+                Layout.leftMargin: 20
+                Layout.rightMargin: 20
+                Layout.bottomMargin: 20
                 columns: 7
                 rowSpacing: 4
                 columnSpacing: 4
@@ -172,13 +172,13 @@ Tooltip {
             UI.Button {
                 Layout.alignment: Qt.AlignHCenter
                 Layout.fillWidth: true
-                Layout.margins: 10
+                Layout.margins: 20
+                Layout.topMargin: 0
 
                 visible: calendarPanel.isNotMonth
 
                 source: Qt.resolvedUrl(Quickshell.shellPath("Icons/home.svg"))
 
-                showText: true
                 text: "Today"
                 textColor: "#f3a6a6"
                 textBold: true

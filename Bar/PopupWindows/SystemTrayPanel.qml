@@ -25,7 +25,7 @@ Tooltip {
 
             RowLayout {
                 Layout.fillWidth: true
-                Layout.margins: 10
+                Layout.margins: 20
                 spacing: 10
 
                 IconImage {

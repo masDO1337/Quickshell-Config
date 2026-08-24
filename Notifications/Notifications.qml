@@ -26,7 +26,7 @@ PanelWindow {
     margins.top: 40
     margins.right: showHistory ? screen.width / 2 - implicitWidth / 2 : 10
 
-    implicitWidth: 360
+    implicitWidth: 380
     implicitHeight: notifications.showHistory ? 480 : Math.max(columnN.implicitHeight + 50, 10)
 
     color: 'transparent'
@@ -62,7 +62,7 @@ PanelWindow {
 
         ColumnLayout {
             anchors.fill: parent
-            anchors.margins: 10
+            anchors.margins: 20
             spacing: 10
 
             RowLayout {

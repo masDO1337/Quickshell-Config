@@ -16,12 +16,14 @@ Tooltip {
 
         ColumnLayout {
             id: mainColumn
-            anchors.fill: parent
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
             spacing: 0
             
             RowLayout {
                 Layout.fillWidth: true
-                Layout.margins: 10
+                Layout.margins: 20
                 spacing: 6
 
                 ColumnLayout {
@@ -55,8 +57,6 @@ Tooltip {
                 }
 
                 UI.Button {
-                    showIcon: false
-                    showText: true
                     text: "IP"
                     textSize: 12
 
@@ -78,7 +78,7 @@ Tooltip {
 
             ColumnLayout {
                 Layout.fillWidth: true
-                Layout.margins: 10
+                Layout.margins: 20
                 spacing: 6
 
                 Text {

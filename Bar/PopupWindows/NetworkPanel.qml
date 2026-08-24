@@ -81,8 +81,6 @@ Tooltip {
                 }
 
                 UI.Button {
-                    showIcon: false
-                    showText: true
                     text: "Scan"
                     textSize: 12
 

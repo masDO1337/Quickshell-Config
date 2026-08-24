@@ -94,8 +94,6 @@ Tooltip {
                 }
 
                 UI.Button {
-                    showIcon: false
-                    showText: true
                     text: root.adapter.discovering ? "Stop" : "Scan"
                     textSize: 12
 
@@ -223,8 +221,6 @@ Tooltip {
                         }
 
                         UI.Button {
-                            showIcon: false
-                            showText: true
                             text: node.modelData?.trusted ? "Untrust" : "Trust"
                             textSize: 12
                             visible: node.modelData?.paired ?? false
@@ -240,8 +236,6 @@ Tooltip {
                         }
 
                         UI.Button {
-                            showIcon: false
-                            showText: true
                             text: "Pair"
                             textSize: 12
                             textBold: true

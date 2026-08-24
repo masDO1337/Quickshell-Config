@@ -50,8 +50,7 @@ Tooltip {
                     Layout.fillWidth: true
                     spacing: 6
 
-                    IconImage {
-                        implicitSize: 16
+                    UI.Button {
                         source: {
                             const muted = sound.sink?.audio?.muted
                             const volume = sound.sink?.audio?.volume;
@@ -61,6 +60,8 @@ Tooltip {
                             if (volume > 0.33) return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker-wave-1.svg"))
                             return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker.svg"))
                         }
+
+                        onClicked: () => { sound.sink.audio.muted = !sound.sink.audio.muted }
                     }
 
                     Text { 
@@ -75,16 +76,6 @@ Tooltip {
                         color: "#a6e1f3"
                         font.pixelSize: 13
                         font.bold: true
-                    }
-
-                    Item { Layout.fillWidth: true }
-
-                    UI.Button {
-                        showIcon: false
-                        showText: true
-                        text: sound.sink?.audio?.muted ? "unmute" : "mute"
-                        textSize: 13
-                        onClicked: () => { sound.sink.audio.muted = !sound.sink.audio.muted }
                     }
                 }
 
@@ -122,9 +113,9 @@ Tooltip {
                     Layout.fillWidth: true
                     spacing: 6
 
-                    IconImage {
-                        implicitSize: 16
+                    UI.Button {
                         source: sound.source?.audio?.muted ? Qt.resolvedUrl(Quickshell.shellPath("Icons/microphone-slash.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/microphone.svg"))
+                        onClicked: () => { sound.source.audio.muted = !sound.source.audio.muted }
                     }
 
                     Text { 
@@ -139,16 +130,6 @@ Tooltip {
                         color: "#a6e1f3"
                         font.pixelSize: 13
                         font.bold: true
-                    }
-
-                    Item { Layout.fillWidth: true }
-
-                    UI.Button {
-                        showIcon: false
-                        showText: true
-                        text: sound.source?.audio?.muted ? "unmute" : "mute"
-                        textSize: 13
-                        onClicked: () => { sound.source.audio.muted = !sound.source.audio.muted }
                     }
                 }
 
@@ -216,8 +197,7 @@ Tooltip {
                             Layout.fillWidth: true
                             spacing: 6
 
-                            IconImage {
-                                implicitSize: 16
+                            UI.Button {
                                 source: {
                                     const muted = node.modelData.audio?.muted
                                     const volume = node.modelData.audio?.volume;
@@ -227,6 +207,7 @@ Tooltip {
                                     if (volume > 0.33) return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker-wave-1.svg"))
                                     return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker.svg"))
                                 }
+                                onClicked: () => { node.modelData.audio.muted = !node.modelData.audio.muted }
                             }
 
                             Text { 
@@ -241,18 +222,6 @@ Tooltip {
                                 color: "#a6e1f3"
                                 font.pixelSize: 12
                                 font.bold: true
-                            }
-
-                            Item { Layout.fillWidth: true }
-
-                            UI.Button {
-                                showIcon: false
-                                showText: true
-                                text: node.modelData.audio.muted ? "unmute" : "mute"
-                                textSize: 12
-                                onClicked: () => {
-                                    node.modelData.audio.muted = !node.modelData.audio.muted
-                                }
                             }
                         }
 
