@@ -17,6 +17,11 @@ ShellRoot {
     property list<Bar> bar: []
     property list<PowerMenu> powerMenu: []
     property list<AppLauncher> appLauncher: []
+
+    function remove(list, item) {
+        const index = list.indexOf(item)
+        if (index !== -1) list.splice(index, 1)
+    }
     
     function toggle(list) {
         for (let item of list) {
@@ -48,6 +53,7 @@ ShellRoot {
                 id: bar 
                 screen: scope.modelData
                 Component.onCompleted: root.bar.push(bar)
+                Component.onDestruction: root.remove(root.bar, bar)
             }
 
             Notifications {
@@ -64,6 +70,7 @@ ShellRoot {
                 id: appLauncher
                 screen: scope.modelData
                 Component.onCompleted: root.appLauncher.push(appLauncher)
+                Component.onDestruction: root.remove(root.appLauncher, appLauncher)
 
                 Connections {
                     target: bar.appLauncher
@@ -75,6 +82,7 @@ ShellRoot {
                 id: powerMenu
                 screen: scope.modelData
                 Component.onCompleted: root.powerMenu.push(powerMenu)
+                Component.onDestruction: root.remove(root.powerMenu, powerMenu)
 
                 Connections {
                     target: bar.powerMenu
