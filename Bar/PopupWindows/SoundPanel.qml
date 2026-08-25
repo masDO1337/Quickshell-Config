@@ -35,40 +35,21 @@ Tooltip {
                 Layout.fillWidth: true
                 spacing: 0
 
-                UI.Button {
-                    Layout.fillWidth: root.selected === 0
-                    radius: 0
-                    text: "Playback"
-                    textBold: false
-                    textColor: root.selected === 0 ? "#ffffff" : "#808080"
-                    onClicked: () => { root.selected = 0 }
-                }
+                Repeater {
+                    model: ["Playback", "Recording", "Outputs", "Inputs"]
 
-                UI.Button {
-                    Layout.fillWidth: root.selected === 1
-                    radius: 0
-                    text: "Recording"
-                    textBold: false
-                    textColor: root.selected === 1 ? "#ffffff" : "#808080"
-                    onClicked: () => { root.selected = 1 }
-                }
+                    UI.Button {
+                        required property int index
+                        required property string modelData
 
-                UI.Button {
-                    Layout.fillWidth: root.selected === 2
-                    radius: 0
-                    text: "Outputs"
-                    textBold: false
-                    textColor: root.selected === 2 ? "#ffffff" : "#808080"
-                    onClicked: () => { root.selected = 2 }
-                }
+                        Layout.fillWidth: root.selected === index
 
-                UI.Button {
-                    Layout.fillWidth: root.selected === 3
-                    radius: 0
-                    text: "Inputs"
-                    textBold: false
-                    textColor: root.selected === 3 ? "#ffffff" : "#808080"
-                    onClicked: () => { root.selected = 3 }
+                        radius: 0
+                        text: modelData
+                        textBold: false
+                        textColor: root.selected === index ? "#ffffff" : "#808080"
+                        onClicked: () => { root.selected = index }
+                    }
                 }
             }
 
@@ -102,7 +83,7 @@ Tooltip {
                     ColumnLayout {
                         id: nodeColumn
                         anchors.fill: parent
-                        spacing: 16
+                        spacing: 8
 
                         RowLayout {
                             Layout.fillWidth: true
@@ -130,30 +111,35 @@ Tooltip {
                                 font.pixelSize: 14
                                 font.bold: true
                             }
+                        }
+
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 8
+
+                            Item {
+                                Layout.fillWidth: true
+                                implicitHeight: 4
+
+                                UI.Slider {
+                                    from: 0
+                                    to: 1.5
+                                    stepSize: 0.05
+                                    snapMode: Slider.SnapOnRelease
+                                    value: node.modelData.audio?.volume || 0
+                                    onValueChanged: {
+                                        if (node.modelData.audio) {
+                                            node.modelData.audio.volume = value
+                                        }
+                                    }
+                                }
+                            }
 
                             Text { 
                                 text: `${Math.round(node.modelData.audio?.volume * 100)}%`
                                 color: "#a6e1f3"
                                 font.pixelSize: 14
                                 font.bold: true
-                            }
-                        }
-
-                        Item {
-                            Layout.fillWidth: true
-                            implicitHeight: 4
-
-                            UI.Slider {
-                                from: 0
-                                to: 1.5
-                                stepSize: 0.05
-                                snapMode: Slider.SnapOnRelease
-                                value: node.modelData.audio?.volume || 0
-                                onValueChanged: {
-                                    if (node.modelData.audio) {
-                                        node.modelData.audio.volume = value
-                                    }
-                                }
                             }
                         }
                     }
