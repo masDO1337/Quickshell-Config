@@ -89,6 +89,7 @@ Tooltip {
                     required property PwNode modelData
 
                     Layout.fillWidth: true
+                    Layout.preferredWidth: nodeColumn.implicitWidth
                     Layout.preferredHeight: nodeColumn.implicitHeight
                     Layout.margins: 20
 
