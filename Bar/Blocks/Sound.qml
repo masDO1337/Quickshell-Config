@@ -56,7 +56,7 @@ Item {
         }
         onWheel: (event) => {
             if (root.sink?.audio) {
-                root.sink.audio.volume = Math.max(0, Math.min(1, root.sink.audio.volume + (event.angleDelta.y / 120) * 0.05))
+                root.sink.audio.volume = Math.max(0, Math.min(1.5, root.sink.audio.volume + (event.angleDelta.y / 120) * 0.05))
             }
         }
     }

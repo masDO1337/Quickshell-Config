@@ -5,6 +5,8 @@ Slider {
     id: s
     anchors.fill: parent
 
+
+
     background: Rectangle {
         x: s.leftPadding
         y: s.topPadding + s.availableHeight / 2 - height / 2
@@ -24,10 +26,10 @@ Slider {
     handle: Rectangle {
         x: s.leftPadding + s.visualPosition * (s.availableWidth - width)
         y: s.topPadding + s.availableHeight / 2 - height / 2
-        width: 16
-        height: 16
-        radius: 8
-        color: s.pressed ? "#4a9eff" : "#ffffff"
-        border.color: "#3c3c3c"
+        width: 6
+        height: 6
+        radius: 4
+        color: "#ffffff"
+        visible: s.pressed || s.hovered
     }
 }

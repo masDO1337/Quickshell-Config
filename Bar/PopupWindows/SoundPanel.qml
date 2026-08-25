@@ -2,151 +2,74 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Controls
 import Quickshell
-import Quickshell.Widgets
 import Quickshell.Services.Pipewire
 import "UI" as UI
 
 Tooltip {
+    id: root
+
+    property int selected: 0
+
     Item {
         id: sound
-        anchors.centerIn: parent
+        anchors.fill: parent
         implicitWidth: Math.max(380, column.implicitWidth)
         implicitHeight: column.implicitHeight
 
-        property PwNode sink: Pipewire.defaultAudioSink
-        property PwNode source: Pipewire.defaultAudioSource
-
-        property list<PwNode> filter: Pipewire.nodes.values.filter(n => n.audio !== null && n.isStream && n.isSink)
-
-        PwObjectTracker { 
-            objects: [Pipewire.defaultAudioSource]
-            onObjectsChanged: {
-                sound.source = Pipewire.defaultAudioSource
-            }
-        }
+        property list<PwNode> playback: Pipewire.nodes.values.filter(n => n.audio !== null && n.isStream && n.isSink)
+        property list<PwNode> recording: Pipewire.nodes.values.filter(n => n.audio !== null && n.isStream && !n.isSink)
+        property list<PwNode> outputs: Pipewire.nodes.values.filter(n => n.audio !== null && !n.isStream && n.isSink)
+        property list<PwNode> inputs: Pipewire.nodes.values.filter(n => n.audio !== null && !n.isStream && !n.isSink)
+        property list<var> filter: [playback, recording, outputs, inputs]
 
         ColumnLayout {
             id: column
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
-            spacing: 4
+            spacing: 0
 
-            ColumnLayout {
+            RowLayout {
                 Layout.fillWidth: true
-                Layout.margins: 20
-                spacing: 4
+                Layout.margins: 1
+                spacing: 0
 
-                Text {
-                    Layout.fillWidth: true
-                    text: "Default Audio Output"
-                    color: "white"
-                    font.pixelSize: 13
-                    font.bold: true
+                UI.Button {
+                    Layout.fillWidth: root.selected === 0
+                    radius: 8
+                    text: "Playback"
+                    textBold: false
+                    textColor: root.selected === 0 ? "#ffffff" : "#808080"
+                    onClicked: () => { root.selected = 0 }
                 }
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    spacing: 6
-
-                    UI.Button {
-                        source: {
-                            const muted = sound.sink?.audio?.muted
-                            const volume = sound.sink?.audio?.volume;
-                            
-                            if (muted) return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker-xmark.svg"))
-                            if (volume > 0.66) return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker-wave-2.svg"))
-                            if (volume > 0.33) return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker-wave-1.svg"))
-                            return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker.svg"))
-                        }
-
-                        onClicked: () => { sound.sink.audio.muted = !sound.sink.audio.muted }
-                    }
-
-                    Text { 
-                        text: `${sound.sink?.description !== "" ? sound.sink?.description : sound.sink?.name}`
-                        color: "#a6e1f3"
-                        font.pixelSize: 13
-                        font.bold: true
-                    }
-
-                    Text { 
-                        text: `${Math.round(sound.sink?.audio?.volume * 100)}%`
-                        color: "#a6e1f3"
-                        font.pixelSize: 13
-                        font.bold: true
-                    }
+                UI.Button {
+                    Layout.fillWidth: root.selected === 1
+                    radius: 8
+                    text: "Recording"
+                    textBold: false
+                    textColor: root.selected === 1 ? "#ffffff" : "#808080"
+                    onClicked: () => { root.selected = 1 }
                 }
 
-                Item {
-                    Layout.fillWidth: true
-                    implicitHeight: 16
-
-                    UI.Slider {
-                        from: 0
-                        to: 1
-                        value: sound.sink?.audio?.volume || 0
-                        onValueChanged: {
-                            if (sound.sink?.audio) {
-                                sound.sink.audio.volume = value
-                            }
-                        }
-                    }
-                }
-            }
-
-            ColumnLayout {
-                Layout.fillWidth: true
-                Layout.margins: 20
-                spacing: 4
-                
-                Text {
-                    Layout.fillWidth: true
-                    text: "Default Audio Input"
-                    color: "white"
-                    font.pixelSize: 13
-                    font.bold: true
+                UI.Button {
+                    Layout.fillWidth: root.selected === 2
+                    radius: 8
+                    text: "Outputs"
+                    textBold: false
+                    textColor: root.selected === 2 ? "#ffffff" : "#808080"
+                    onClicked: () => { root.selected = 2 }
                 }
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    spacing: 6
-
-                    UI.Button {
-                        source: sound.source?.audio?.muted ? Qt.resolvedUrl(Quickshell.shellPath("Icons/microphone-slash.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/microphone.svg"))
-                        onClicked: () => { sound.source.audio.muted = !sound.source.audio.muted }
-                    }
-
-                    Text { 
-                        text: `${sound.source?.description !== "" ? sound.source?.description : sound.source?.name}`
-                        color: "#a6e1f3"
-                        font.pixelSize: 13
-                        font.bold: true
-                    }
-
-                    Text { 
-                        text: `${Math.round(sound.source?.audio?.volume * 100)}%`
-                        color: "#a6e1f3"
-                        font.pixelSize: 13
-                        font.bold: true
-                    }
-                }
-
-                Item {
-                    Layout.fillWidth: true
-                    implicitHeight: 16
-
-                    UI.Slider {
-                        from: 0
-                        to: 1
-                        value: sound.source?.audio?.volume || 0
-                        onValueChanged: {
-                            if (sound.source?.audio) {
-                                sound.source.audio.volume = value
-                            }
-                        }
-                    }
+                UI.Button {
+                    Layout.fillWidth: root.selected === 3
+                    radius: 8
+                    text: "Inputs"
+                    textBold: false
+                    textColor: root.selected === 3 ? "#ffffff" : "#808080"
+                    onClicked: () => { root.selected = 3 }
                 }
             }
 
@@ -154,22 +77,10 @@ Tooltip {
                 Layout.fillWidth: true
                 implicitHeight: 1
                 color: '#afafaf'
-                visible: sound.filter.length > 0
-            }
-
-            Text {
-                Layout.fillWidth: true
-                Layout.margins: 20
-                Layout.bottomMargin: 0
-                text: "Playback"
-                color: "white"
-                font.pixelSize: 13
-                font.bold: true
-                visible: sound.filter.length > 0
             }
 
             Repeater {
-                model: sound.filter
+                model: sound.filter[root.selected]
 
                 Item {
                     id: node
@@ -184,24 +95,27 @@ Tooltip {
                     PwObjectTracker { 
                         objects: [node.modelData]
                         onObjectsChanged: {
-                            node.modelData = sound.filter[node.index]
+                            node.modelData = sound.filter[root.selected][node.index]
                         }
                     }
 
                     ColumnLayout {
                         id: nodeColumn
                         anchors.fill: parent
-                        spacing: 4
+                        spacing: 16
 
                         RowLayout {
                             Layout.fillWidth: true
-                            spacing: 6
+                            spacing: 8
 
                             UI.Button {
                                 source: {
+                                    const isSink = node.modelData.isSink
                                     const muted = node.modelData.audio?.muted
-                                    const volume = node.modelData.audio?.volume;
+                                    const volume = node.modelData.audio?.volume
                                     
+                                    if (!isSink && muted) return Qt.resolvedUrl(Quickshell.shellPath("Icons/microphone-slash.svg"))
+                                    if (!isSink) return Qt.resolvedUrl(Quickshell.shellPath("Icons/microphone.svg"))
                                     if (muted) return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker-xmark.svg"))
                                     if (volume > 0.66) return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker-wave-2.svg"))
                                     if (volume > 0.33) return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker-wave-1.svg"))
@@ -213,25 +127,27 @@ Tooltip {
                             Text { 
                                 text: `${node.modelData.description !== "" ? node.modelData.description : node.modelData.name}`
                                 color: "#a6e1f3"
-                                font.pixelSize: 12
+                                font.pixelSize: 14
                                 font.bold: true
                             }
 
                             Text { 
                                 text: `${Math.round(node.modelData.audio?.volume * 100)}%`
                                 color: "#a6e1f3"
-                                font.pixelSize: 12
+                                font.pixelSize: 14
                                 font.bold: true
                             }
                         }
 
                         Item {
                             Layout.fillWidth: true
-                            implicitHeight: 16
+                            implicitHeight: 4
 
                             UI.Slider {
                                 from: 0
-                                to: 1
+                                to: 1.5
+                                stepSize: 0.05
+                                snapMode: Slider.SnapOnRelease
                                 value: node.modelData.audio?.volume || 0
                                 onValueChanged: {
                                     if (node.modelData.audio) {

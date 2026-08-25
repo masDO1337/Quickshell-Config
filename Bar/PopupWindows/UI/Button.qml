@@ -19,6 +19,7 @@ Rectangle {
 
     implicitWidth: row.implicitWidth + 16
     implicitHeight: row.implicitHeight + 12
+
     radius: 6
     color: m.containsMouse ? '#707f7f7f' : "#1e1e1e"
 
