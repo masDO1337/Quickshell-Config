@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
+import Quickshell.Widgets
 
 LazyLoader {
     id: root
@@ -63,7 +64,7 @@ LazyLoader {
         implicitWidth: body.implicitWidth
         implicitHeight: body.implicitHeight
 
-        Rectangle {
+        ClippingRectangle {
             id: body
 
             anchors.fill: parent

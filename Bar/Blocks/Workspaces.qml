@@ -1,14 +1,15 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell.Hyprland
+import Quickshell.Widgets
 
-Rectangle {
+ClippingRectangle {
     Layout.fillHeight: true
     Layout.preferredWidth: row.implicitWidth
     Layout.topMargin: 2
     Layout.bottomMargin: 2
     color: "#1e1e1e"
-    radius: 8
+    radius: 11
 
     RowLayout {
         id: row
@@ -25,7 +26,7 @@ Rectangle {
                 required property int index
                 required property HyprlandWorkspace modelData
 
-                Layout.preferredHeight: text.implicitHeight + 8
+                Layout.preferredHeight: 24
                 Layout.preferredWidth: text.implicitWidth > text.implicitHeight ? text.implicitWidth + 16 : text.implicitHeight + 8
 
                 color: modelData.urgent ? "#f3a6a6" : m.containsMouse ? "#707f7f7f" : '#00ffffff'

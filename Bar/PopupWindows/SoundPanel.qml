@@ -33,12 +33,11 @@ Tooltip {
 
             RowLayout {
                 Layout.fillWidth: true
-                Layout.margins: 1
                 spacing: 0
 
                 UI.Button {
                     Layout.fillWidth: root.selected === 0
-                    radius: 8
+                    radius: 0
                     text: "Playback"
                     textBold: false
                     textColor: root.selected === 0 ? "#ffffff" : "#808080"
@@ -47,7 +46,7 @@ Tooltip {
 
                 UI.Button {
                     Layout.fillWidth: root.selected === 1
-                    radius: 8
+                    radius: 0
                     text: "Recording"
                     textBold: false
                     textColor: root.selected === 1 ? "#ffffff" : "#808080"
@@ -56,7 +55,7 @@ Tooltip {
 
                 UI.Button {
                     Layout.fillWidth: root.selected === 2
-                    radius: 8
+                    radius: 0
                     text: "Outputs"
                     textBold: false
                     textColor: root.selected === 2 ? "#ffffff" : "#808080"
@@ -65,7 +64,7 @@ Tooltip {
 
                 UI.Button {
                     Layout.fillWidth: root.selected === 3
-                    radius: 8
+                    radius: 0
                     text: "Inputs"
                     textBold: false
                     textColor: root.selected === 3 ? "#ffffff" : "#808080"

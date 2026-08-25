@@ -10,8 +10,6 @@ Rectangle {
     property string text: ""
     property string textColor: "white"
 
-    property alias rowLayout: row
-    
     property alias mouse: m
     property var acceptedButtons: Qt.LeftButton
     property var onClicked: (event) => {}
@@ -19,7 +17,7 @@ Rectangle {
 
     implicitWidth: row.implicitWidth + 8
     implicitHeight: 22
-    radius: 6
+    radius: 4
     color: m.containsMouse ? '#707f7f7f' : "transparent"
 
     Behavior on color {
