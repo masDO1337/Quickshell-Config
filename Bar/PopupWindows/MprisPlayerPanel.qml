@@ -8,7 +8,7 @@ import "UI" as UI
 Tooltip {
     ColumnLayout {
         anchors.centerIn: parent
-        spacing: 10
+        spacing: 0
 
         Repeater {
             model: Mpris.players
@@ -34,68 +34,38 @@ Tooltip {
                     return `${m}:${String(sec).padStart(2, "0")}`
                 }
 
-                Layout.preferredWidth: Math.max(nodeColumn.implicitWidth + 20, 320)
+                Layout.preferredWidth: 320
                 Layout.preferredHeight: 180
                 color: "transparent"
 
-                Item {
+                Image {
                     anchors.fill: parent
-                    anchors.margins: 4
-
+                    source: Qt.resolvedUrl(node.modelData.trackArtUrl)
                     visible: node.modelData.trackArtUrl !== ""
-
-                    Image {
-                        id: sourceImage
-                        anchors.fill: parent
-                        fillMode: Image.PreserveAspectCrop
-                        source: Qt.resolvedUrl(node.modelData.trackArtUrl)
-                        visible: false
-                    }
-
-                    MultiEffect {
-                        anchors.fill: sourceImage
-                        source: sourceImage
-
-                        maskEnabled: true
-                        maskSource: mask
-                    }
-
-                    Item {
-                        id: mask
-                        width: sourceImage.width
-                        height: sourceImage.height
-                        layer.enabled: true
-                        visible: false
-
-                        Rectangle {
-                            anchors.fill: parent
-                            radius: 8
-                        }
-                    }
+                }
                     
-                    Rectangle {
-                        anchors.fill: sourceImage
-                        color: '#8f000000'
-                        radius: 4
-                    }
+                Rectangle {
+                    anchors.fill: parent
+                    color: '#8f000000'
+                    radius: 4
                 }
 
                 ColumnLayout {
-                    id: nodeColumn
                     anchors.fill: parent
                     anchors.margins: 10
                     spacing: 8
                     
                     Text {
+                        Layout.fillWidth: true
                         elide: Text.ElideRight
                         color: "white"
                         font.bold: true
                         font.pixelSize: 16
                         text: `${node.modelData.trackTitle || "Unknown Title"}`
-                        Layout.maximumWidth: 320
                     }
 
                     Text {
+                        Layout.fillWidth: true
                         elide: Text.ElideRight
                         color: "white"
                         font.pixelSize: 13
@@ -109,25 +79,21 @@ Tooltip {
                         spacing: 20
 
                         UI.Button {
-                            source: node.modelData.canGoPrevious ? Qt.resolvedUrl(Quickshell.shellPath("Icons/skip-backward.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/skip-backward-2.svg"))
-                            onClicked: () => {
-                                if (node.modelData.canGoPrevious) node.modelData.previous()
-                            }
+                            source: Qt.resolvedUrl(Quickshell.shellPath("Icons/skip-backward.svg"))
+                            onClicked: () => node.modelData.previous()
+                            visible: node.modelData.canGoPrevious
                         }
 
                         UI.Button {
-                            visible: node.modelData.canTogglePlaying
                             source: node.modelData.isPlaying ? Qt.resolvedUrl(Quickshell.shellPath("Icons/pause.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/play.svg"))
-                            onClicked: () => {
-                                if (node.modelData.canTogglePlaying) node.modelData.togglePlaying()
-                            }
+                            onClicked: () => node.modelData.togglePlaying()
+                            visible: node.modelData.canTogglePlaying
                         }
 
                         UI.Button {
-                            source: node.modelData.canGoNext ? Qt.resolvedUrl(Quickshell.shellPath("Icons/skip-forward.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/skip-forward-2.svg"))
-                            onClicked: () => {
-                                if (node.modelData.canGoNext) node.modelData.next()
-                            }
+                            source: Qt.resolvedUrl(Quickshell.shellPath("Icons/skip-forward.svg"))
+                            onClicked: () => node.modelData.next()
+                            visible: node.modelData.canGoNext
                         }
                     }
 
@@ -148,7 +114,7 @@ Tooltip {
                             Timer {
                                 interval: 1000
                                 repeat: true
-                                running: node.modelData.isPlaying ?? false
+                                running: node.modelData.playbackState == MprisPlaybackState.Playing
 
                                 // Quickshell position usually does not update reactively.
                                 onTriggered: node.modelData.positionChanged()
@@ -159,11 +125,12 @@ Tooltip {
                                 from: 0
                                 to: node.modelData.length ?? 1
 
-                                value: pressed ? value : node.modelData.position ?? 0
+                                value: node.modelData.position ?? 0
 
                                 onMoved: {
                                     if (node.modelData.canSeek && node.modelData.positionSupported)
                                         node.modelData.position = value
+                                        node.modelData.positionChanged()
                                 }
                             }
                         }
