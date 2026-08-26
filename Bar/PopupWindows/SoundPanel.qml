@@ -18,11 +18,11 @@ Tooltip {
         implicitWidth: Math.max(380, column.implicitWidth)
         implicitHeight: column.implicitHeight
 
-        property list<PwNode> playback: Pipewire.nodes.values.filter(n => n.audio !== null && n.isStream && n.isSink)
-        property list<PwNode> recording: Pipewire.nodes.values.filter(n => n.audio !== null && n.isStream && !n.isSink)
-        property list<PwNode> outputs: Pipewire.nodes.values.filter(n => n.audio !== null && !n.isStream && n.isSink)
-        property list<PwNode> inputs: Pipewire.nodes.values.filter(n => n.audio !== null && !n.isStream && !n.isSink)
-        property list<var> filter: [playback, recording, outputs, inputs]
+        property list<PwNode> playback:  Pipewire.nodes.values.filter(n => n.audio !== null &&  n.isStream &&  n.isSink)
+        property list<PwNode> recording: Pipewire.nodes.values.filter(n => n.audio !== null &&  n.isStream && !n.isSink)
+        property list<PwNode> outputs:   Pipewire.nodes.values.filter(n => n.audio !== null && !n.isStream &&  n.isSink)
+        property list<PwNode> inputs:    Pipewire.nodes.values.filter(n => n.audio !== null && !n.isStream && !n.isSink)
+        property list<var> mode: [playback, recording, outputs, inputs]
 
         ColumnLayout {
             id: column
@@ -60,7 +60,7 @@ Tooltip {
             }
 
             Repeater {
-                model: sound.filter[root.selected]
+                model: sound.mode[root.selected]
 
                 Item {
                     id: node
@@ -71,12 +71,15 @@ Tooltip {
                     Layout.fillWidth: true
                     Layout.preferredWidth: nodeColumn.implicitWidth
                     Layout.preferredHeight: nodeColumn.implicitHeight
-                    Layout.margins: 20
+                    Layout.leftMargin: 20
+                    Layout.rightMargin: 20
+                    Layout.topMargin: 10
+                    Layout.bottomMargin: 10
 
                     PwObjectTracker { 
                         objects: [node.modelData]
                         onObjectsChanged: {
-                            node.modelData = sound.filter[root.selected][node.index]
+                            node.modelData = sound.mode[root.selected][node.index]
                         }
                     }
 
@@ -87,7 +90,15 @@ Tooltip {
 
                         RowLayout {
                             Layout.fillWidth: true
-                            spacing: 8
+                            spacing: 4
+
+                            Text {
+                                Layout.fillWidth: true
+                                text: `${node.modelData.description !== "" ? node.modelData.description : node.modelData.name}`
+                                color: '#ffffff'
+                                font.pixelSize: 14
+                                font.bold: true
+                            }
 
                             UI.Button {
                                 source: {
@@ -95,21 +106,26 @@ Tooltip {
                                     const muted = node.modelData.audio?.muted
                                     const volume = node.modelData.audio?.volume
                                     
-                                    if (!isSink && muted) return Qt.resolvedUrl(Quickshell.shellPath("Icons/microphone-slash.svg"))
-                                    if (!isSink) return Qt.resolvedUrl(Quickshell.shellPath("Icons/microphone.svg"))
-                                    if (muted) return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker-xmark.svg"))
-                                    if (volume > 0.66) return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker-wave-2.svg"))
-                                    if (volume > 0.33) return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker-wave-1.svg"))
-                                    return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker.svg"))
+                                    if (!isSink &&  muted) return Qt.resolvedUrl(Quickshell.shellPath("Icons/microphone-slash-w.svg"))
+                                    if ( isSink &&  muted) return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker-xmark-w.svg"))
+                                    if (!isSink && !muted) return Qt.resolvedUrl(Quickshell.shellPath("Icons/microphone-w.svg"))
+                                    if (volume > 0.66) return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker-wave-2-w.svg"))
+                                    if (volume > 0.33) return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker-wave-1-w.svg"))
+                                    return Qt.resolvedUrl(Quickshell.shellPath("Icons/speaker-w.svg"))
                                 }
                                 onClicked: () => { node.modelData.audio.muted = !node.modelData.audio.muted }
                             }
 
-                            Text { 
-                                text: `${node.modelData.description !== "" ? node.modelData.description : node.modelData.name}`
-                                color: "#a6e1f3"
-                                font.pixelSize: 14
-                                font.bold: true
+                            UI.Button {
+                                source: node.modelData === Pipewire.defaultAudioSink ? Qt.resolvedUrl(Quickshell.shellPath("Icons/emblem-default.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/emblem-default-2.svg"))
+                                onClicked: () => { Pipewire.preferredDefaultAudioSink = node.modelData }
+                                visible: root.selected === 2
+                            }
+
+                            UI.Button {
+                                source: node.modelData === Pipewire.defaultAudioSource ? Qt.resolvedUrl(Quickshell.shellPath("Icons/emblem-default.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/emblem-default-2.svg"))
+                                onClicked: () => { Pipewire.preferredDefaultAudioSource = node.modelData }
+                                visible: root.selected === 3
                             }
                         }
 
@@ -119,6 +135,7 @@ Tooltip {
 
                             Item {
                                 Layout.fillWidth: true
+                                Layout.alignment: Qt.AlignVCenter
                                 implicitHeight: 4
 
                                 UI.Slider {
@@ -128,16 +145,14 @@ Tooltip {
                                     snapMode: Slider.SnapOnRelease
                                     value: node.modelData.audio?.volume || 0
                                     onValueChanged: {
-                                        if (node.modelData.audio) {
-                                            node.modelData.audio.volume = value
-                                        }
+                                        if (node.modelData.audio) node.modelData.audio.volume = value
                                     }
                                 }
                             }
 
                             Text { 
                                 text: `${Math.round(node.modelData.audio?.volume * 100)}%`
-                                color: "#a6e1f3"
+                                color: '#ffffff'
                                 font.pixelSize: 14
                                 font.bold: true
                             }

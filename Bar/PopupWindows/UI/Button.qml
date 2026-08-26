@@ -17,8 +17,8 @@ Rectangle {
     property var acceptedButtons: Qt.LeftButton
     property var onClicked: (event) => {}
 
-    implicitWidth: row.implicitWidth + 16
-    implicitHeight: row.implicitHeight + 12
+    implicitWidth: row.implicitWidth + 14
+    implicitHeight: row.implicitHeight + 14
 
     radius: 6
     color: m.containsMouse ? '#707f7f7f' : "#1e1e1e"

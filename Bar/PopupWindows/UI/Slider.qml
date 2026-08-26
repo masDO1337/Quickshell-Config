@@ -18,7 +18,7 @@ Slider {
         Rectangle {
             width: s.visualPosition * parent.width
             height: parent.height
-            color: "#4a9eff"
+            color: '#7f7f7f'
             radius: 2
         }
     }

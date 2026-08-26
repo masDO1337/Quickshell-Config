@@ -94,13 +94,12 @@ Tooltip {
                         id: row
                         anchors.fill: parent
                         anchors.margins: 8
-                        anchors.leftMargin: 12
-                        spacing: 4
+                        spacing: 8
                         visible: !item.modelData.isSeparator
 
                         IconImage {
                             implicitSize: 16
-                            source: item.modelData.icon || Qt.resolvedUrl(Quickshell.shellPath("Icons/dot-circle.svg"))
+                            source: item.modelData.icon || Qt.resolvedUrl(Quickshell.shellPath("Icons/image-missing.svg"))
                         }
 
                         Text {
