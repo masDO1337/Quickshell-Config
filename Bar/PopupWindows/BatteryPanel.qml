@@ -14,15 +14,16 @@ Tooltip {
         implicitWidth: Math.max(380, row.implicitWidth)
         implicitHeight: row.implicitHeight
 
+        property UPowerDevice info: UPower.displayDevice
         property int percentage: UPower.displayDevice.percentage * 100
         
         function getToFull() {
-            var s = UPower.displayDevice.timeToFull
+            var s = info.timeToFull
             return Math.round(s / 3600) + "h " + Math.round(s / 60) % 60 + "m " + s % 60 + "s"
         }
 
         function getToEmpty() {
-            var s = UPower.displayDevice.timeToEmpty
+            var s = info.timeToEmpty
             return Math.round(s / 3600) + "h " + Math.round(s / 60) % 60 + "m " + s % 60 + "s"
         }
 
@@ -43,12 +44,12 @@ Tooltip {
                 color: '#7f7f7f'
                 radius: 32
 
-                visible: Quickshell.iconPath(UPower.displayDevice.iconName, true) !== ""
+                visible: Quickshell.iconPath(battery.info.iconName, true) !== ""
 
                 IconImage {
                     anchors.centerIn: parent
                     implicitSize: 48
-                    source: Quickshell.iconPath(UPower.displayDevice.iconName, true)
+                    source: Quickshell.iconPath(battery.info.iconName, true)
                 }
             }
 
@@ -66,14 +67,14 @@ Tooltip {
 
                 Text {
                     Layout.fillWidth: true
-                    text: `Capacity: ${UPower.displayDevice.energyCapacity.toFixed(2)} W/h`
+                    text: `Capacity: ${battery.info.energyCapacity.toFixed(2)} W/h`
                     color: "#808080"
                     font.pixelSize: 12
                 }
 
                 Text {
                     Layout.fillWidth: true
-                    text: `Energy: ${UPower.displayDevice.energy.toFixed(2)} W/h`
+                    text: `Energy: ${battery.info.energy.toFixed(2)} W/h`
                     color: "#808080"
                     font.pixelSize: 12
                 }
@@ -84,37 +85,37 @@ Tooltip {
                 Layout.margins: 20
 
                 Text {
-                    text: `Status: ${UPowerDeviceState.toString(UPower.displayDevice.state)}`
+                    text: `Status: ${UPowerDeviceState.toString(battery.info.state)}`
                     color: "#808080"
                     font.pixelSize: 12
                 }
 
                 Text {
-                    text: `Health: ${UPower.displayDevice.healthPercentage * 100}%`
+                    text: `Health: ${battery.info.healthPercentage * 100}%`
                     color: "#808080"
                     font.pixelSize: 12
-                    visible: UPower.displayDevice.healthSupported
+                    visible: battery.info.healthSupported
                 }
 
                 Text {
                     text: `Time full: ${battery.getToFull()}`
                     color: "#808080"
                     font.pixelSize: 12
-                    visible: UPower.displayDevice.state === UPowerDeviceState.Charging
+                    visible: battery.info.state === UPowerDeviceState.Charging
                 }
 
                 Text {
                     text: `Time Empty: ${battery.getToEmpty()}`
                     color: "#808080"
                     font.pixelSize: 12
-                    visible: UPower.displayDevice.state === UPowerDeviceState.Discharging
+                    visible: battery.info.state === UPowerDeviceState.Discharging
                 }
 
                 Text {
-                    text: `Change Rate: ${UPower.displayDevice.changeRate.toFixed(2)}W`
+                    text: `Change Rate: ${battery.info.changeRate.toFixed(2)}W`
                     color: "#808080"
                     font.pixelSize: 12
-                    visible: UPower.displayDevice.state === UPowerDeviceState.Discharging || UPower.displayDevice.state === UPowerDeviceState.Charging
+                    visible: battery.info.state === UPowerDeviceState.Discharging || battery.info.state === UPowerDeviceState.Charging
                 }
             }
         }
