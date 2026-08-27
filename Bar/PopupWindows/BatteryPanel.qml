@@ -104,7 +104,7 @@ Tooltip {
                 }
 
                 Text {
-                    text: `Time Left: ${battery.getToEmpty()}`
+                    text: `Time Empty: ${battery.getToEmpty()}`
                     color: "#808080"
                     font.pixelSize: 12
                     visible: UPower.displayDevice.state === UPowerDeviceState.Discharging
