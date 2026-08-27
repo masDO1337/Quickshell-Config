@@ -93,7 +93,7 @@ Tooltip {
                     RowLayout {
                         id: row
                         anchors.fill: parent
-                        anchors.margins: 8
+                        anchors.leftMargin: 8
                         spacing: 8
                         visible: !item.modelData.isSeparator
 
