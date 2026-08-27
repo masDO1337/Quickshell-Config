@@ -21,7 +21,7 @@ Rectangle {
     implicitHeight: row.implicitHeight + 14
 
     radius: 6
-    color: m.containsMouse ? '#707f7f7f' : "#1e1e1e"
+    color: m.containsMouse ? '#7f7f7f' : "#1e1e1e"
 
     Behavior on color {
         ColorAnimation { duration: 350; easing.type: Easing.OutCubic }

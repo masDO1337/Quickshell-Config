@@ -29,7 +29,7 @@ ClippingRectangle {
                 Layout.preferredHeight: 24
                 Layout.preferredWidth: text.implicitWidth > text.implicitHeight ? text.implicitWidth + 16 : text.implicitHeight + 8
 
-                color: modelData.urgent ? "#f3a6a6" : m.containsMouse ? "#707f7f7f" : '#00ffffff'
+                color: modelData.urgent ? "#f3a6a6" : m.containsMouse ? "#7f7f7f" : '#00ffffff'
 
                 Behavior on color {
                     ColorAnimation { duration: 350; easing.type: Easing.OutCubic }
@@ -69,7 +69,7 @@ ClippingRectangle {
                     font.pixelSize: 13
                     font.bold: true
                     text: workspace.modelData.id <= 0 ? workspace.modelData.name.split("special:")[1] : workspace.modelData.name
-                    color: workspace.modelData.focused ? "#f3a6a6" : m.containsMouse || workspace.modelData.urgent ? "#1e1e1e" : "#828282"
+                    color: workspace.modelData.focused ? "#f3a6a6" : m.containsMouse || workspace.modelData.urgent ? "#1e1e1e" : "#7f7f7f"
                 }
             }
         }
