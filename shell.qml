@@ -49,21 +49,13 @@ ShellRoot {
 
             Polkit { screen: scope.modelData }
 
+            Notifications { screen: scope.modelData }
+
             Bar {
                 id: bar 
                 screen: scope.modelData
                 Component.onCompleted: root.bar.push(bar)
                 Component.onDestruction: root.remove(root.bar, bar)
-            }
-
-            Notifications {
-                id: notifications
-                screen: scope.modelData
-
-                Connections {
-                    target: bar.notifications
-                    function onToggle() { notifications.toggle() }
-                }
             }
 
             AppLauncher {

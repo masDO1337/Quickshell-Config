@@ -7,7 +7,6 @@ PanelWindow {
     id: bar
 
     property alias appLauncher: appLauncher
-    property alias notifications: notifications
     property alias powerMenu: powerMenu
     property alias sound: sound
 
@@ -54,7 +53,7 @@ PanelWindow {
 
         Blocks.MprisPlayer {}
         Blocks.ActiveWorkspace {}
-        Blocks.Notifications { id: notifications }
+        Blocks.Notifications {}
     }
 
     RowLayout {

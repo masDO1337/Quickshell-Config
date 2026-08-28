@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import "../../services" as Services
+import "../PopupWindows"
 import "UI" as UI
 
 Item {
@@ -15,8 +16,13 @@ Item {
         id: box
         anchors.centerIn: parent
 
-        source: Services.Notifications.history.count === 0 ? Qt.resolvedUrl(Quickshell.shellPath("Icons/notification-none.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/notification-on.svg"))
+        source: Services.Notifications.historyLength === 0 ? Qt.resolvedUrl(Quickshell.shellPath("Icons/notification-none.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/notification-on.svg"))
 
-        onClicked: () => root.toggle()
+        onClicked: () => notificationsPanel.toggle()
+    }
+
+    NotificationsPanel {
+        id: notificationsPanel
+        parentItem: root
     }
 }
