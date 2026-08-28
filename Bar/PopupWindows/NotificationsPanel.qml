@@ -102,8 +102,8 @@ Tooltip {
                             spacing: 12
 
                             Item {
-                                Layout.preferredWidth: 64
-                                Layout.preferredHeight: 64
+                                Layout.preferredWidth: image.implicitSize
+                                Layout.preferredHeight: image.implicitSize
 
                                 ClippingRectangle {
                                     anchors.fill: parent
@@ -111,25 +111,15 @@ Tooltip {
                                     color: "transparent"
 
                                     IconImage {
+                                        id: image
                                         anchors.centerIn: parent
-                                        implicitSize: 64
+                                        implicitSize: (delegateRoot.modelData.image ?? "") !== "" ? 64 : 48
                                         source: {
                                             const isImage = (delegateRoot.modelData.image ?? "") !== ""
                                             const src = Quickshell.iconPath(delegateRoot.modelData.appIcon ?? "", true)
                                             return isImage ? delegateRoot.modelData.image : src !== "" ? src : delegateRoot.modelData.appIcon
                                         }
                                     }
-                                }
-
-                                IconImage {
-                                    anchors.bottom: parent.bottom
-                                    anchors.right: parent.right
-                                    implicitSize: 24
-                                    source: {
-                                        var src = Quickshell.iconPath(delegateRoot.modelData.appIcon ?? "", true)
-                                        return src !== "" ? src : delegateRoot.modelData.appIcon
-                                    }
-                                    visible: (delegateRoot.modelData.image ?? "") !== ""
                                 }
                             }
 

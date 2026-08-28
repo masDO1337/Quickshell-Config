@@ -27,7 +27,7 @@ Singleton {
                     summary: notification.summary,
                     body: notification.body,
                     appName: notification.appName,
-                    image: notification.image,
+                    image: "", //notification.image,
                     appIcon: notification.appIcon,
                     urgency: notification.urgency,
                     time: new Date().toISOString()
