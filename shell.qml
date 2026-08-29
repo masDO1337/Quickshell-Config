@@ -10,6 +10,7 @@ import "AppLauncher"
 import "Notifications"
 import "PowerMenu"
 import "Polkit"
+import "Screenshot"
 
 ShellRoot {
     id: root
@@ -17,6 +18,7 @@ ShellRoot {
     property list<Bar> bar: []
     property list<PowerMenu> powerMenu: []
     property list<AppLauncher> appLauncher: []
+    property list<Screenshot> screenshot: []
 
     function remove(list, item) {
         const index = list.indexOf(item)
@@ -38,6 +40,7 @@ ShellRoot {
                 if (Hyprland.focusedMonitor == Hyprland.monitorFor(item.screen)) item.sound.toggle()     
             }
         }
+        function screenshot() { root.toggle(root.screenshot) }
     }
 
     Variants {
@@ -68,6 +71,13 @@ ShellRoot {
                     target: bar.appLauncher
                     function onToggle() { appLauncher.toggle() }
                 }
+            }
+
+            Screenshot {
+                id: screenshot
+                screen: scope.modelData
+                Component.onCompleted: root.screenshot.push(screenshot)
+                Component.onDestruction: root.remove(root.screenshot, screenshot)
             }
 
             PowerMenu {
