@@ -27,7 +27,6 @@ LazyLoader {
 
     function toggle() {
         if (active) {
-            if (!hover) item.grabFocus = false
             active = false
         } else {
             loading = true
@@ -62,7 +61,12 @@ LazyLoader {
         color: "transparent"
 
         implicitWidth: body.implicitWidth
-        implicitHeight: body.implicitHeight
+        implicitHeight: body.implicitHeight 
+
+        Shortcut {
+            sequence: "ESCAPE"
+            onActivated: root.active = !root.active
+        }
 
         ClippingRectangle {
             id: body
