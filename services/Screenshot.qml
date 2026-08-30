@@ -21,6 +21,7 @@ Singleton {
         onExited: () => {
             console.log(root.outputPath)
             Quickshell.execDetached(["sh", "-c", `wl-copy < "${root.outputPath}"`])
+            Quickshell.execDetached(["sh", "-c", "notify-send -a quickshell -c screenshot -u low -i", root.outputPath, "Screenshot Saved."])
             root.callback()
         }
 

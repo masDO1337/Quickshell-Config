@@ -24,8 +24,8 @@ PanelWindow {
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
 
     property HyprlandMonitor monitor: Hyprland.focusedMonitor
-    property HyprlandWorkspace workspace: monitor?.activeWorkspace
-    property ObjectModel windows: workspace?.toplevels ?? []
+    property HyprlandWorkspace workspace
+    property list<HyprlandToplevel> windows: []
 
     property point startPos
     property vector4d target: Qt.vector4d(0, 0, 0, 0)
@@ -38,6 +38,8 @@ PanelWindow {
             Hyprland.refreshToplevels()
             screencopy.captureFrame()
             target = Qt.vector4d(0, 0, 0, 0)
+            workspace = monitor?.activeWorkspace
+            windows = workspace?.toplevels.values
         }
 
         visible = !visible
@@ -115,7 +117,7 @@ PanelWindow {
 
         onReleased: (mouse) => {
             if (root.target.z === 0 || root.target.w === 0) {
-                root.windows.values.forEach(window => {
+                root.windows.forEach(window => {
                     const monitorX = root.monitor.lastIpcObject.x
                     const monitorY = root.monitor.lastIpcObject.y
 
