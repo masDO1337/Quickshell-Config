@@ -100,8 +100,8 @@ PanelWindow {
         sequence: "Return"
         onActivated: {
             if (root.currentIndex < 0 || root.currentIndex > root.menu.length - 1) return
-            root.off()
             Quickshell.execDetached(root.menu[root.currentIndex].run)
+            root.off()
         }
     }
 
@@ -139,8 +139,8 @@ PanelWindow {
                     text: modelData.text
                     source: modelData.icon
                     onClicked: () => {
+                        Quickshell.execDetached(modelData.run)
                         root.off()
-                        Quickshell.execDetached(root.menu[root.currentIndex].run)
                     }
                     onEntered: index => {root.currentIndex = index}
                 }
