@@ -3,9 +3,9 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Widgets
 import Quickshell.Services.SystemTray
 import "../PopupWindows"
-import "UI" as UI
 
 Repeater {
     model: SystemTray.items
@@ -17,26 +17,45 @@ Repeater {
         Layout.fillHeight: true
         implicitWidth: box.implicitWidth
 
-        UI.Button {
+        Rectangle {
             id: box
             anchors.centerIn: parent
 
-            source: Qt.resolvedUrl(node.modelData.icon)
+            implicitWidth: 22
+            implicitHeight: 22
+            radius: 4
+            color: m.containsMouse ? '#7f7f7f' : "transparent"
 
-            acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
-            onClicked: event => {
-                if (event.button == Qt.LeftButton) {
-                    menu.toggle();
-                } else if (event.button == Qt.MiddleButton) {
-                    node.modelData.secondaryActivate();
-                } else if (event.button == Qt.RightButton) {
-                    node.modelData.activate();
-                }
+            Behavior on color {
+                ColorAnimation { duration: 350; easing.type: Easing.OutCubic }
             }
-            onWheel: event => {
-                event.accepted = true;
-                const points = event.angleDelta.y / 120
-                node.modelData.scroll(points, false);
+
+            IconImage {
+                anchors.centerIn: parent
+                implicitSize: 14
+                source: Qt.resolvedUrl(node.modelData.icon)
+            }
+
+            MouseArea {
+                id: m
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
+                onClicked: event => {
+                    if (event.button == Qt.LeftButton) {
+                        menu.toggle();
+                    } else if (event.button == Qt.MiddleButton) {
+                        node.modelData.secondaryActivate();
+                    } else if (event.button == Qt.RightButton) {
+                        node.modelData.activate();
+                    }
+                }
+                onWheel: event => {
+                    event.accepted = true;
+                    const points = event.angleDelta.y / 120
+                    node.modelData.scroll(points, false);
+                }
             }
         }
 
