@@ -11,7 +11,7 @@ import "UI" as UI
 Tooltip {
     Item {
         anchors.fill: parent
-        implicitWidth: Math.max(380, column.implicitWidth)
+        implicitWidth: Math.max(460, column.implicitWidth)
         implicitHeight: column.implicitHeight
 
         ColumnLayout {
@@ -68,18 +68,22 @@ Tooltip {
                 highlightMoveDuration: 150
                 highlightMoveVelocity: -1
 
+                currentIndex: -1
+
                 highlight: Rectangle {
                     color: '#1e1e1e'
                     visible: resultsList.currentIndex >= 0
                 }
 
                 delegate: Rectangle {
-                    id: delegateRoot
+                    id: node
                     required property var modelData
                     required property int index
 
                     property string urgencyColor: modelData.urgency === NotificationUrgency.Critical ? "#f3a6a6" : modelData.urgency === NotificationUrgency.Normal ? "#afafaf" : '#1c1c1c'
                     property date date: new Date(modelData.time)
+
+                    property bool hover: resultsList.currentIndex === node.index
 
                     width: resultsList.width
                     implicitHeight: content.implicitHeight + 20
@@ -88,7 +92,7 @@ Tooltip {
                     MouseArea {
                         anchors.fill: parent
                         hoverEnabled: true
-                        onEntered: resultsList.currentIndex = delegateRoot.index
+                        onEntered: resultsList.currentIndex = node.index
                     }
                     
                     ColumnLayout {
@@ -113,49 +117,48 @@ Tooltip {
                                     IconImage {
                                         id: image
                                         anchors.centerIn: parent
-                                        implicitSize: (delegateRoot.modelData.image ?? "") !== "" ? 64 : 48
+                                        implicitSize: (node.modelData.image ?? "") !== "" ? 64 : 48
                                         source: {
-                                            const isImage = (delegateRoot.modelData.image ?? "") !== ""
-                                            const src = Quickshell.iconPath(delegateRoot.modelData.appIcon ?? "", true)
-                                            return isImage ? delegateRoot.modelData.image : src !== "" ? src : delegateRoot.modelData.appIcon
+                                            const isImage = (node.modelData.image ?? "") !== ""
+                                            const src = Quickshell.iconPath(node.modelData.appIcon ?? "", true)
+                                            return isImage ? node.modelData.image : src !== "" ? src : node.modelData.appIcon
                                         }
                                     }
                                 }
                             }
 
                             ColumnLayout {
-                                Layout.fillWidth: true
 
                                 Text {
                                     Layout.fillWidth: true
-                                    text: delegateRoot.modelData.summary ?? ""
-                                    color: resultsList.currentIndex === delegateRoot.index ? "#fff" : "#828282"
+                                    text: node.modelData.summary ?? ""
+                                    color: node.hover ? "#fff" : "#828282"
                                     font.pixelSize: 16
-                                    font.bold: resultsList.currentIndex === delegateRoot.index
+                                    font.bold: node.hover
                                     elide: Text.ElideRight
                                 }
 
                                 Text {
                                     Layout.fillWidth: true
-                                    text: delegateRoot.modelData.body ?? ""
+                                    text: node.modelData.body ?? ""
                                     color: "#828282"
                                     font.pixelSize: 16
-                                    elide: Text.ElideRight
-                                    wrapMode: Text.NoWrap
-                                    maximumLineCount: 1
+                                    elide: node.hover ? Text.ElideNone : Text.ElideRight
+                                    wrapMode: node.hover ? Text.Wrap : Text.NoWrap
+                                    maximumLineCount: node.hover ? 99 : 1
                                     visible: text !== ""
                                 }
                             }
 
                             UI.Button {
                                 source: Qt.resolvedUrl(Quickshell.shellPath("Icons/x.svg"))
-                                onClicked: () => Services.Notifications.remove(delegateRoot.index)
+                                onClicked: () => Services.Notifications.remove(node.index)
                             }
                         }
 
                         Text {
                             Layout.alignment: Qt.AlignRight
-                            text: `${Qt.formatDateTime(delegateRoot.date, "yyyy-MM-dd  HH:mm")}` ?? ""
+                            text: `${Qt.formatDateTime(node.date, "yyyy-MM-dd  HH:mm")}` ?? ""
                             color: "#828282"
                             font.pixelSize: 14
                             elide: Text.ElideRight

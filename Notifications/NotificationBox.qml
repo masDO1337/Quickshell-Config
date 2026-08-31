@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.VectorImage
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Hyprland
@@ -26,6 +27,9 @@ ClippingRectangle {
 
     HoverHandler {
         id: hover
+        onHoveredChanged: {
+            if (hovered) progressBar.width = progressBar.initWidth
+        }
     }
 
     Timer {
@@ -48,7 +52,6 @@ ClippingRectangle {
             Layout.fillWidth: true
             Layout.margins: 10
             spacing: 16
-            visible: !root.hovered
 
             Item {
                 Layout.preferredWidth: 64
@@ -100,37 +103,39 @@ ClippingRectangle {
                     text: root.modelData.body ?? ""
                     color: "#828282"
                     font.pixelSize: 14
-                    elide: Text.ElideRight
-                    wrapMode: Text.NoWrap
-                    maximumLineCount: 1
+                    elide: root.hovered ? Text.ElideNone : Text.ElideRight
+                    wrapMode: root.hovered ? Text.Wrap : Text.NoWrap
+                    maximumLineCount: root.hovered ? 99 : 1
                     visible: text !== ""
                 }
             }
 
-            ExitButton {
-                onClicked: () => root.modelData.dismiss()
-            }
-        }
+            Rectangle {
+                Layout.preferredWidth: 32
+                Layout.preferredHeight: 32
+                radius: 16
+                color: closeHover.containsMouse ? '#7f7f7f' : '#1e1e1e'
 
-        RowLayout {
-            Layout.fillWidth: true
-            Layout.margins: 10
-            spacing: 16
-            visible: root.hovered
+                Behavior on color {
+                    ColorAnimation { duration: 350; easing.type: Easing.OutCubic }
+                }
+                
+                VectorImage {
+                    id: image
+                    width: 16
+                    height: 16
+                    preferredRendererType: VectorImage.CurveRenderer
+                    anchors.centerIn: parent
+                    source: Qt.resolvedUrl(Quickshell.shellPath("Icons/x.svg"))
+                }
 
-            Text {
-                text: root.modelData.body ?? ""
-                color: "#fff"
-                font.pixelSize: 16
-                wrapMode: Text.Wrap
-                elide: Text.ElideRight
-                textFormat: Text.PlainText
-                Layout.fillWidth: true
-                visible: text !== ""
-            }
-
-            ExitButton {
-                onClicked: () => root.modelData.dismiss()
+                MouseArea {
+                    id: closeHover
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: () => root.modelData.dismiss()
+                }
             }
         }
 
