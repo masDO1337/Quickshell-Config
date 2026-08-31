@@ -9,12 +9,15 @@ Singleton {
     id: root
 
     property ListModel packages: ListModel {}
-    property int packagesPacman: 0
-    property int packagesAUR: 0
+    property bool showPackages: packages.count > 0
 
-    property bool showUpdates: packages.count > 0
+    property list<string> updates: []
+    property bool showUpdates: updates.length > 0
 
     property bool checking: pacmanUpdates.running || aurUpdates.running
+
+    property int packagesPacman: 0
+    property int packagesAUR: 0
 
     property Timer updateTimer: Timer {
         interval: 1000 * 60 * 60 * 2 // every 2 h
@@ -66,6 +69,7 @@ Singleton {
 
     function checkAllUpdates() {
         packages.clear()
+        updates = []
 
         pacmanUpdates.running = true
         aurUpdates.running = true
@@ -119,13 +123,31 @@ Singleton {
         sortPackagesByName()
     }
 
-    function runUpdate(packageName) {
-        if (packageName !== "") {
-            update.command = ["kitty", "-e", "paru", "-Sy", packageName]
+    function runUpdate(all: bool) {
+        if (!all) {
+            update.command = ["kitty", "-e", "paru", "-Sy", ...updates]
             update.running = true
         } else {
             update.command = ["kitty", "-e", "paru"]
             update.running = true
         }
+    }
+
+    function clearUpdate() {
+        updates = []
+    }
+
+    function isInUpdates(name: string): bool {
+        return updates.indexOf(name) !== -1
+    }
+
+    function toUpdate(name: string) {
+        if (!name && name !== "") return
+        if (isInUpdates(name)) {
+            updates.pop(updates.indexOf(name))
+            return
+        }
+        
+        updates.push(name)
     }
 }

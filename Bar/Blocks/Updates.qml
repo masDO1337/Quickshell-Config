@@ -14,9 +14,9 @@ Item {
         id: box
         anchors.centerIn: parent
 
-        source: Services.Updates.showUpdates ? Qt.resolvedUrl(Quickshell.shellPath("Icons/update.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/up-to-date.svg"))
+        source: Services.Updates.showPackages ? Qt.resolvedUrl(Quickshell.shellPath("Icons/update.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/up-to-date.svg"))
 
-        text: Services.Updates.checking ? "Checking" : Services.Updates.showUpdates ? Services.Updates.packages.count.toString() : ""
+        text: Services.Updates.checking ? "Checking" : Services.Updates.showPackages ? Services.Updates.packages.count.toString() : ""
         textColor: "#f3a6a6"
 
         acceptedButtons: Qt.LeftButton | Qt.RightButton

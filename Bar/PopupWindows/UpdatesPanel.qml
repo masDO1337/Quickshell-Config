@@ -10,7 +10,7 @@ Tooltip {
     Item {
         anchors.fill: parent
 
-        implicitWidth: Math.max(column.implicitWidth, 400)
+        implicitWidth: Services.Updates.showPackages ? 400 : column.implicitWidth
         implicitHeight: column.implicitHeight
 
         ColumnLayout {
@@ -25,12 +25,16 @@ Tooltip {
                 Layout.alignment: Qt.AlignHCenter
                 Layout.margins: 20
                 Layout.fillWidth: true
-                spacing: 20
+                spacing: 6
 
-                RowLayout {
-                    spacing: 10
+                visible: Services.Updates.showPackages
+
+                GridLayout {
+                    columns: 2
+                    columnSpacing: 8
                     
                     Text {
+                        Layout.alignment: Qt.AlignRight
                         text: "Pacman"
                         color:"#828282"
                         font.pixelSize: 14
@@ -41,12 +45,9 @@ Tooltip {
                         color: update.mouse.containsMouse ? "#fff" : "#828282"
                         font.pixelSize: 14
                     }
-                }
-
-                RowLayout {
-                    spacing: 10
 
                     Text {
+                        Layout.alignment: Qt.AlignRight
                         text: "AUR"
                         color: "#828282"
                         font.pixelSize: 14
@@ -59,21 +60,28 @@ Tooltip {
                     }
                 }
 
-                Item { 
-                    Layout.fillWidth: true
+                Item { Layout.fillWidth: true }
+
+                UI.Button {
                     visible: Services.Updates.showUpdates
+                    text: "Clear"
+                    onClicked: () => Services.Updates.clearUpdate()
+                }
+
+                UI.Button {
+                    visible: Services.Updates.showUpdates
+                    text: "Update"
+                    onClicked: () => {
+                        Services.Updates.runUpdate(false)
+                        root.toggle()
+                    }
                 }
 
                 UI.Button {
                     id: update
-                    Layout.alignment: Qt.AlignRight
-                    visible: Services.Updates.showUpdates
-                    
                     text: "Update All"
-                    textSize: 14
-
                     onClicked: () => {
-                        Services.Updates.runUpdate("")
+                        Services.Updates.runUpdate(true)
                         root.toggle()
                     }
                 }
@@ -83,12 +91,13 @@ Tooltip {
                 Layout.fillWidth: true
                 implicitHeight: 1
                 color: '#afafaf'
+                visible: Services.Updates.showPackages
             }
 
             ListView {  
                 id: resultsList
 
-                visible: Services.Updates.showUpdates
+                visible: Services.Updates.showPackages
 
                 model: Services.Updates.packages
 
@@ -106,22 +115,13 @@ Tooltip {
                     radius: 8
                     color: '#1e1e1e'
                     visible: resultsList.currentIndex >= 0
-
-                    Rectangle {
-                        width: 3
-                        height: 16
-                        radius: 2
-                        color: "#808080"
-                        anchors.left: parent.left
-                        anchors.leftMargin: 2
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
                 }
 
                 delegate: Rectangle {
-                    id: delegateRoot
+                    id: node
                     required property var modelData
                     required property int index
+                    property string name: modelData.name
                     property string from: modelData.from
 
                     width: resultsList.width
@@ -131,45 +131,46 @@ Tooltip {
 
                     RowLayout {
                         anchors.fill: parent
-                        anchors.leftMargin: 12
-                        anchors.rightMargin: 12
                         spacing: 0
 
-                        RowLayout {
-                            Layout.preferredWidth: 180
-                            spacing: 2
-
-                            Text {
-                                text: delegateRoot.from !== "pacman" ? `[${delegateRoot.from.toUpperCase()}]` : ""
-                                color: resultsList.currentIndex === delegateRoot.index ? "white" : "#828282"
-                                font.pixelSize: 12
-                                visible: text !== ""
-                            }
-
-                            Text {
-                                text: delegateRoot.modelData.name
-                                color: resultsList.currentIndex === delegateRoot.index ? "white" : "#828282"
-                                font.pixelSize: 12
-                                font.bold: resultsList.currentIndex === delegateRoot.index
-                                elide: Text.ElideRight
-                            }
+                        Rectangle {
+                            Layout.preferredWidth: 8
+                            Layout.preferredHeight: 8
+                            Layout.leftMargin: 8
+                            radius: 4
+                            color: Services.Updates.isInUpdates(node.name) ? "#fff" : resultsList.currentIndex === node.index ? "#7f7f7f" : "#1e1e1e"
                         }
-  
+
+                        Text {
+                            Layout.fillWidth: true
+                            Layout.leftMargin: 8
+                            text: `${node.from !== "pacman" ? node.from.toUpperCase() + "  " : ""}${node.name}`
+                            color: resultsList.currentIndex === node.index ? "white" : "#7f7f7f"
+                            font.pixelSize: 12
+                            font.bold: resultsList.currentIndex === node.index
+                            elide: Text.ElideRight
+                        }
+
                         Text {
                             Layout.preferredWidth: 80
-                            text: delegateRoot.modelData.old
-                            color: resultsList.currentIndex === delegateRoot.index ? "#f3a6a6" : "#828282"
+                            text: node.modelData.old
+                            color: resultsList.currentIndex === node.index ? "#f3a6a6" : "#7f7f7f"
                             font.pixelSize: 12
                             elide: Text.ElideLeft
                         }
 
                         Text {
+                            text: ">"
+                            color: resultsList.currentIndex === node.index ? "#fff" : "#7f7f7f"
+                            font.pixelSize: 12
+                        }
+
+                        Text {
                             Layout.preferredWidth: 80
-                            text: delegateRoot.modelData.new
-                            color: resultsList.currentIndex === delegateRoot.index ? '#bcf3a6' : "#828282"
+                            text: node.modelData.new
+                            color: resultsList.currentIndex === node.index ? '#bcf3a6' : "#7f7f7f"
                             font.pixelSize: 12
                             elide: Text.ElideLeft
-                            Layout.alignment: Qt.AlignRight
                         }
                     }
 
@@ -177,18 +178,15 @@ Tooltip {
                         anchors.fill: parent
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
-                        onClicked: () => {
-                            Services.Updates.runUpdate(delegateRoot.modelData.name)
-                            root.toggle()
-                        }
-                        onPositionChanged: resultsList.currentIndex = delegateRoot.index
+                        onClicked: () => Services.Updates.toUpdate(node.name)
+                        onEntered: resultsList.currentIndex = node.index
                     }
 
                 }
             }
 
             Text {
-                Layout.margins: 10
+                Layout.margins: 20
                 Layout.alignment: Qt.AlignHCenter
                 text: "No package found"
                 color: '#828282'
