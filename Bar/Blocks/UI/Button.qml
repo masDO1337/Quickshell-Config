@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
-import Quickshell.Widgets
+import QtQuick.VectorImage
 
 Rectangle {
     id: root
@@ -29,8 +29,10 @@ Rectangle {
         anchors.centerIn: parent
         spacing: 4
 
-        IconImage {
-            implicitSize: 14
+        VectorImage {
+            Layout.preferredWidth: 14
+            Layout.preferredHeight: 14
+            preferredRendererType: VectorImage.CurveRenderer
             source: root.source
         }
 

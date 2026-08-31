@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.VectorImage
 import Quickshell
-import Quickshell.Widgets
 
 Rectangle {
     id: root
@@ -16,9 +16,11 @@ Rectangle {
         ColorAnimation { duration: 350; easing.type: Easing.OutCubic }
     }
     
-    IconImage {
+    VectorImage {
         id: image
-        implicitSize: 16
+        width: 16
+        height: 16
+        preferredRendererType: VectorImage.CurveRenderer
         anchors.centerIn: parent
         source: Qt.resolvedUrl(Quickshell.shellPath("Icons/x.svg"))
     }
