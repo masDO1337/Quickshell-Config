@@ -34,8 +34,8 @@ Item {
 
         Item {
             anchors.fill: parent
-            implicitWidth: t.implicitWidth + 10
-            implicitHeight: t.implicitHeight + 10
+            implicitWidth: t.implicitWidth + 20
+            implicitHeight: t.implicitHeight + 20
             
             Text {
                 id: t
