@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Io
 import Quickshell.Widgets
 import Quickshell.Hyprland
 
@@ -9,26 +8,6 @@ Item {
     Layout.fillHeight: true
     Layout.preferredWidth: row.implicitWidth
     id: root
-
-    property string title: ""
-
-    Process {
-        id: titleProc
-        command: ["sh", "-c", "hyprctl activewindow | grep title: | sed 's/^[^:]*: //'"]
-        running: true
-
-        stdout: SplitParser {
-            onRead: data => root.title = data
-        }
-    }
-
-    Component.onCompleted: {
-        Hyprland.rawEvent.connect(hyprEvent)
-    }
-
-    function hyprEvent(e) {
-        titleProc.running = true
-    }
 
     RowLayout {
         id: row
@@ -41,7 +20,7 @@ Item {
         }
 
         Text {
-            text: root.title
+            text: Hyprland.activeToplevel?.title || ""
             Layout.maximumWidth: 600
             elide: Text.ElideRight
             font.pixelSize: 13
