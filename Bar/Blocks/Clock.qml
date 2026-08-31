@@ -22,7 +22,7 @@ Item {
 
         source: root.showDate ? Qt.resolvedUrl(Quickshell.shellPath("Icons/calendar.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/clock-circle.svg"))
 
-        text: root.showDate ? Qt.formatDateTime(systemClock.date, "dd / MM / yyyy") : Qt.formatDateTime(systemClock.date, "hh : mm")
+        text: root.showDate ? Qt.formatDateTime(systemClock.date, "yyyy / MM / dd") : Qt.formatDateTime(systemClock.date, "hh : mm")
         textColor: "#f3a6a6"
 
         acceptedButtons: Qt.LeftButton | Qt.RightButton
