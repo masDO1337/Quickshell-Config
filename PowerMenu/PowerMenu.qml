@@ -1,14 +1,40 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Hyprland
-import "../services" as Services
 import "UI" as UI
 
 PanelWindow {
     id: root
     
+    property int currentIndex: 0
+    property list<var> menu: [
+        {
+            text: "Lock",
+            icon: Qt.resolvedUrl(Quickshell.shellPath("Icons/system-lock.svg")),
+            run: ["hyprlock"]
+        },
+        {
+            text: "Logout",
+            icon: Qt.resolvedUrl(Quickshell.shellPath("Icons/system-logout.svg")),
+            run: ["uwsm", "stop"]
+        },
+        {
+            text: "Reboot",
+            icon: Qt.resolvedUrl(Quickshell.shellPath("Icons/system-reboot.svg")),
+            run: ["systemctl", "reboot"]
+        },
+        {
+            text: "Power Off",
+            icon: Qt.resolvedUrl(Quickshell.shellPath("Icons/system-shutdown.svg")),
+            run: ["systemctl", "poweroff"]
+        }
+    ]
+
+
     visible: false
     focusable: false
 
@@ -44,19 +70,15 @@ PanelWindow {
     function off() {
         visible = false
         margins.right = -implicitWidth - 20
-        body.currentIndex = 1
+        root.currentIndex = 0
     }
 
     HyprlandFocusGrab {
         id: grab
         windows: [ root ]
-    }
-    
-    Connections {
-        target: grab
-        function onCleared() {
+        onCleared: {
             root.off()
-        } 
+        }
     }
 
     Shortcut {
@@ -66,44 +88,25 @@ PanelWindow {
 
     Shortcut {
         sequence: "Up"
-        onActivated: body.currentIndex = Math.max(body.currentIndex - 1, 1)
+        onActivated: root.currentIndex = Math.max(root.currentIndex - 1, 0)
     }
 
     Shortcut {
         sequence: "Down"
-        onActivated: body.currentIndex = Math.min(body.currentIndex + 1, 4)
+        onActivated: root.currentIndex = Math.min(root.currentIndex + 1, root.menu.length - 1)
     }
 
     Shortcut {
         sequence: "Return"
         onActivated: {
-            if (body.currentIndex === 0) return
-            switch(body.currentIndex) {
-            case 1:
-                Services.PowerMenu.lock.running = true
-                root.off()
-                break;
-            case 2:
-                Services.PowerMenu.logout.running = true
-                root.off()
-                break;
-            case 3:
-                Services.PowerMenu.reboot.running = true
-                root.off()
-                break;
-            case 4:
-                Services.PowerMenu.poweroff.running = true
-                root.off()
-                break;
-            }
+            if (root.currentIndex < 0 || root.currentIndex > root.menu.length - 1) return
+            root.off()
+            Quickshell.execDetached(root.menu[root.currentIndex].run)
         }
     }
 
     Rectangle {
         id: body
-
-        property int currentIndex: 1
-
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         implicitWidth: Math.max(content.implicitWidth + 20, 50)
@@ -124,40 +127,23 @@ PanelWindow {
             anchors.margins: 10
             spacing: 10
 
-            UI.Button {
-                index: 1
-                currentIndex: body.currentIndex
-                text: "Lock"
-                source: Qt.resolvedUrl(Quickshell.shellPath("Icons/system-lock.svg"))
-                onClicked: () => {Services.PowerMenu.lock.running = true; root.off()}
-                onEntered: index => {body.currentIndex = index}
-            }
+            Repeater {
+                model: root.menu
 
-            UI.Button {
-                index: 2
-                currentIndex: body.currentIndex
-                text: "Logout"
-                source: Qt.resolvedUrl(Quickshell.shellPath("Icons/system-logout.svg"))
-                onClicked: () => {Services.PowerMenu.logout.running = true; root.off()}
-                onEntered: index => {body.currentIndex = index}
-            }
+                UI.Button {
+                    required property int index
+                    required property var modelData
 
-            UI.Button {
-                index: 3
-                currentIndex: body.currentIndex
-                text: "Reboot"
-                source: Qt.resolvedUrl(Quickshell.shellPath("Icons/system-reboot.svg"))
-                onClicked: () => {Services.PowerMenu.reboot.running = true; root.off()}
-                onEntered: index => {body.currentIndex = index}
-            }
+                    on: mouse.containsMouse || index === root.currentIndex
 
-            UI.Button {
-                index: 4
-                currentIndex: body.currentIndex
-                text: "Power Off"
-                source: Qt.resolvedUrl(Quickshell.shellPath("Icons/system-shutdown.svg"))
-                onClicked: () => {Services.PowerMenu.poweroff.running = true; root.off()}
-                onEntered: index => {body.currentIndex = index}
+                    text: modelData.text
+                    source: modelData.icon
+                    onClicked: () => {
+                        root.off()
+                        Quickshell.execDetached(root.menu[root.currentIndex].run)
+                    }
+                    onEntered: index => {root.currentIndex = index}
+                }
             }
         }
     }

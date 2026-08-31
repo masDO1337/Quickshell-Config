@@ -5,19 +5,19 @@ import QtQuick.VectorImage
 Rectangle {
     id: root
 
-    property int index: 0
-    property int currentIndex: 0
-    property bool on: mouse.containsMouse || index === currentIndex
+    property bool on: m.containsMouse
     property string text: "Button"
     property url source: undefined
     property var onClicked: () => {}
     property var onEntered: (index) => {}
 
+    property alias mouse: m
+
     Layout.fillWidth: !on
     implicitWidth: row.implicitWidth + 13
     implicitHeight: row.implicitHeight + 13
     radius: 8
-    color: on ? '#487f7f7f' : '#48080808'
+    color: on ? '#7f7f7f' : "#1e1e1e"
 
     Behavior on color {
         ColorAnimation { duration: 350; easing.type: Easing.OutCubic }
@@ -45,7 +45,7 @@ Rectangle {
     }
 
     MouseArea {
-        id: mouse
+        id: m
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton
         hoverEnabled: true
