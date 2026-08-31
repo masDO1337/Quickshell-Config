@@ -11,7 +11,7 @@ Rectangle {
     property string text: ""
     property string textColor: "white"
     property int textSize: 16 
-    property bool textBold: true
+    property bool textBold: false
 
     property alias mouse: m
     property var acceptedButtons: Qt.LeftButton

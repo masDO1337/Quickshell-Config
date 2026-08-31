@@ -28,7 +28,7 @@ Rectangle {
             NumberAnimation { duration: 350; easing.type: Easing.OutCubic }
         }
         radius: 14
-        color: root.checked ? "#FFF" : "#808080"
+        color: root.checked ? "#FFF" : m.containsMouse ? "#1e1e1e" : "#808080"
     }
 
     MouseArea {
