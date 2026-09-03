@@ -23,11 +23,18 @@ Singleton {
             property int maxHistory: 100
 
             function add(notification: Notification) {
+                let imagePath = notification.image
+
+                // If the imagePath has a image://qsimage/ prefix or contains /tmp/, set it to empty string
+                if (imagePath.startsWith("image://qsimage/") || imagePath.includes("/tmp/")) {
+                    imagePath = ""
+                }
+
                 let obj = {
                     summary: notification.summary,
                     body: notification.body,
                     appName: notification.appName,
-                    image: "", //notification.image,
+                    image: imagePath,
                     appIcon: notification.appIcon,
                     urgency: notification.urgency,
                     time: new Date().toISOString()
