@@ -74,7 +74,10 @@ PanelWindow {
 
             SearchBar {
                 id: input
-                onTextChanged: Services.AppLauncher.input = text
+                onTextChanged: {
+                    Services.AppLauncher.input = text
+                    output.currentIndex = 0
+                }
                 onPressed: event => {
                     if (event.key === Qt.Key_Down || event.key === Qt.Key_Tab) {
                         event.accepted = true;
