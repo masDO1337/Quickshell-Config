@@ -34,13 +34,9 @@ PanelWindow {
     HyprlandFocusGrab {
         id: grab
         windows: [ launcherPanel ]
-    }
-    
-    Connections {
-        target: grab
-        function onCleared() {
+        onCleared: () => {
             launcherPanel.visible = false
-        } 
+        }
     }
 
     Shortcut {
