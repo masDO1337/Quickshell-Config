@@ -61,7 +61,7 @@ Singleton {
     }
 
     property Process update: Process {
-        command: ["kitty", "-e", "paru"]
+        command: ["kitty", "--hold", "-e", "paru"]
         running: false
 
         onExited: root.checkAllUpdates()
@@ -125,10 +125,11 @@ Singleton {
 
     function runUpdate(all: bool) {
         if (!all) {
-            update.command = ["kitty", "-e", "paru", "-Sy", ...updates]
+            // Run update for selected packages and pause until press any key
+            update.command = ["kitty", "--hold", "-e", "paru", "-Sy", ...updates]
             update.running = true
         } else {
-            update.command = ["kitty", "-e", "paru"]
+            update.command = ["kitty", "--hold", "-e", "paru", "-Syu"]
             update.running = true
         }
     }
