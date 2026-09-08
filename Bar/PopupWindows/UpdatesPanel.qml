@@ -137,6 +137,7 @@ Tooltip {
                             Layout.preferredWidth: 8
                             Layout.preferredHeight: 8
                             Layout.leftMargin: 8
+                            Layout.rightMargin: 8
                             radius: 4
                             color: Services.Updates.isInUpdates(node.name) ? "#fff" : resultsList.currentIndex === node.index ? "#7f7f7f" : "#1e1e1e"
                         }
@@ -151,26 +152,31 @@ Tooltip {
                             elide: Text.ElideRight
                         }
 
-                        Text {
-                            Layout.preferredWidth: 80
-                            text: node.modelData.old
-                            color: resultsList.currentIndex === node.index ? "#f3a6a6" : "#7f7f7f"
-                            font.pixelSize: 12
-                            elide: Text.ElideLeft
-                        }
+                        RowLayout {
+                            Layout.preferredWidth: 160
+                            spacing: 4
+                            Text {
+                                Layout.alignment: Qt.AlignRight
+                                text: node.modelData.old
+                                color: resultsList.currentIndex === node.index ? "#f3a6a6" : "#7f7f7f"
+                                font.pixelSize: 12
+                                elide: Text.ElideLeft
+                            }
 
-                        Text {
-                            text: ">"
-                            color: resultsList.currentIndex === node.index ? "#fff" : "#7f7f7f"
-                            font.pixelSize: 12
-                        }
+                            Text {
+                                Layout.alignment: Qt.AlignHCenter
+                                text: "-->"
+                                color: resultsList.currentIndex === node.index ? "#fff" : "#7f7f7f"
+                                font.pixelSize: 12
+                            }
 
-                        Text {
-                            Layout.preferredWidth: 80
-                            text: node.modelData.new
-                            color: resultsList.currentIndex === node.index ? '#bcf3a6' : "#7f7f7f"
-                            font.pixelSize: 12
-                            elide: Text.ElideLeft
+                            Text {
+                                Layout.alignment: Qt.AlignLeft
+                                text: node.modelData.new
+                                color: resultsList.currentIndex === node.index ? '#bcf3a6' : "#7f7f7f"
+                                font.pixelSize: 12
+                                elide: Text.ElideLeft
+                            }
                         }
                     }
 

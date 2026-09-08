@@ -117,131 +117,135 @@ Tooltip {
                     radius: 8
                     color: '#1e1e1e'
                     visible: list.currentIndex >= 0
-
-                    Rectangle {
-                        width: 3
-                        height: 24
-                        radius: 2
-                        color: "#808080"
-                        anchors.left: parent.left
-                        anchors.leftMargin: 2
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
                 }
 
-                delegate: Rectangle {
+                delegate: Item {
                     id: node
                     required property var index
                     required property BluetoothDevice modelData
 
-                    width: ListView.view.width
-                    implicitHeight: 42
-                    radius: 6
+                    property bool showButtons: false
 
-                    color: "transparent"
+                    width: ListView.view.width
+                    implicitHeight: nodeColumn.implicitHeight + 10
 
                     MouseArea {
                         anchors.fill: parent
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
-                        onClicked: () => node.modelData.connected = !node.modelData.connected
-                        onPositionChanged: list.currentIndex = node.index
+                        onClicked: () => node.showButtons = !node.showButtons
+                        onPositionChanged: () => list.currentIndex = node.index
                     }
 
-                    RowLayout {
+                    ColumnLayout {
+                        id: nodeColumn
                         anchors.fill: parent
-                        anchors.leftMargin: 10
-                        anchors.rightMargin: 10
-                        spacing: 8
+                        anchors.margins: 5
+                        
+                        RowLayout {
+                            spacing: 8
 
-                        Item {
-                            width: 28
-                            height: 28
-                            Layout.alignment: Qt.AlignVCenter
-                            visible: Quickshell.iconPath(node.modelData?.icon ?? "", true) !== ""
-
-                            IconImage {
-                                anchors.fill: parent
-                                implicitSize: 28
-                                source: Quickshell.iconPath(node.modelData?.icon ?? "", true)
-                            }
-                        }
-
-                        ColumnLayout {
-                            Layout.fillWidth: true
-                            spacing: 2
-
-                            Text {
-                                Layout.fillWidth: true
-                                text: node.modelData?.name || node.modelData?.deviceName || node.modelData?.address || "Unknown"
-                                color: node.modelData?.connected ?? false
-                                    ? "#a6f3b0"
-                                    : list.currentIndex === node.index 
-                                    ? "white"
-                                    : "#808080"
-                                font.pixelSize: 13
-                                elide: Text.ElideRight
-                            }
-
-                            Text {
-                                text: BluetoothDeviceState.toString(node.modelData?.state ?? BluetoothDeviceState.Disconnected)
-                                color: "#808080"
-                                font.pixelSize: 11
-                                elide: Text.ElideRight
-                            }
-                        }
-
-                        // Battery indicator
-                        Item {
-                            implicitWidth: batteryRow.implicitWidth
-                            visible: node.modelData?.batteryAvailable ?? false
-                            RowLayout {
-                                id: batteryRow
-                                anchors.centerIn: parent
-                                spacing: 4
+                            Item {
+                                width: 28
+                                height: 28
+                                Layout.alignment: Qt.AlignVCenter
+                                visible: Quickshell.iconPath(node.modelData?.icon ?? "", true) !== ""
 
                                 IconImage {
-                                    implicitSize: 16
-                                    source: {
-                                        if (node.modelData?.battery < 0.3)
-                                            return Qt.resolvedUrl(Quickshell.shellPath("Icons/battery-empty.svg"))
-                                        else if (node.modelData?.battery < 0.6)
-                                            return Qt.resolvedUrl(Quickshell.shellPath("Icons/battery-half.svg"))
-                                        else
-                                            return Qt.resolvedUrl(Quickshell.shellPath("Icons/battery-full.svg"))
-                                    }
+                                    anchors.fill: parent
+                                    implicitSize: 28
+                                    source: Quickshell.iconPath(node.modelData?.icon ?? "", true)
+                                }
+                            }
+
+                            ColumnLayout {
+                                Layout.fillWidth: true
+                                spacing: 2
+
+                                Text {
+                                    Layout.fillWidth: true
+                                    text: node.modelData?.name || node.modelData?.deviceName || node.modelData?.address || "Unknown"
+                                    color: node.modelData?.connected ?? false
+                                        ? "#a6f3b0"
+                                        : list.currentIndex === node.index 
+                                        ? "white"
+                                        : "#808080"
+                                    font.pixelSize: 13
+                                    elide: Text.ElideRight
                                 }
 
                                 Text {
-                                    text: Math.round(node.modelData?.battery * 100) + "%"
-                                    color: "#bfbfbf"
-                                    font.pixelSize: 12
+                                    text: BluetoothDeviceState.toString(node.modelData?.state ?? BluetoothDeviceState.Disconnected)
+                                    color: "#808080"
+                                    font.pixelSize: 11
+                                    elide: Text.ElideRight
+                                }
+                            }
+
+                            // Battery indicator
+                            Item {
+                                implicitWidth: batteryRow.implicitWidth
+                                visible: node.modelData?.batteryAvailable ?? false
+                                RowLayout {
+                                    id: batteryRow
+                                    anchors.centerIn: parent
+                                    spacing: 4
+
+                                    IconImage {
+                                        implicitSize: 16
+                                        source: {
+                                            if (node.modelData?.battery < 0.3)
+                                                return Qt.resolvedUrl(Quickshell.shellPath("Icons/battery-empty.svg"))
+                                            else if (node.modelData?.battery < 0.6)
+                                                return Qt.resolvedUrl(Quickshell.shellPath("Icons/battery-half.svg"))
+                                            else
+                                                return Qt.resolvedUrl(Quickshell.shellPath("Icons/battery-full.svg"))
+                                        }
+                                    }
+
+                                    Text {
+                                        text: Math.round(node.modelData?.battery * 100) + "%"
+                                        color: "#bfbfbf"
+                                        font.pixelSize: 12
+                                    }
                                 }
                             }
                         }
 
-                        UI.Button {
-                            text: node.modelData?.trusted ? "Untrust" : "Trust"
-                            textSize: 12
-                            visible: node.modelData?.paired ?? false
+                        RowLayout {
+                            Layout.fillWidth: true
+                            visible: node.showButtons
+                            spacing: 8
 
-                            onClicked: () => node.modelData.trusted = !node.modelData.trusted
-                        }
+                            UI.Button {
+                                text: node.modelData?.connected ? "Disconnect" : "Connect"
+                                textSize: 12
+                                onClicked: () => node.modelData.connected = !node.modelData.connected
+                            }
 
-                        UI.Button {
-                            source: Qt.resolvedUrl(Quickshell.shellPath("Icons/trash.svg"))
-                            visible: node.modelData?.paired ?? false
+                            UI.Button {
+                                text: node.modelData?.trusted ? "Untrust" : "Trust"
+                                textSize: 12
+                                visible: node.modelData?.paired && node.modelData?.bonded
+                                onClicked: () => node.modelData.trusted = !node.modelData.trusted
+                            }
 
-                            onClicked: () => node.modelData.forget()
-                        }
+                            UI.Button {
+                                text: "Pair"
+                                textSize: 12
+                                visible: !node.modelData?.paired && !node.modelData?.bonded
+                                onClicked: () => node.modelData.pair()
+                            }
 
-                        UI.Button {
-                            text: "Pair"
-                            textSize: 12
-                            textBold: true
-                            visible: !node.modelData?.paired ?? false
+                            Item {
+                                Layout.fillWidth: true
+                            }
 
-                            onClicked: () => node.modelData.pair()
+                            UI.Button {
+                                source: Qt.resolvedUrl(Quickshell.shellPath("Icons/trash.svg"))
+                                visible: node.modelData?.paired ?? false
+                                onClicked: () => node.modelData.forget()
+                            }
                         }
                     }
                 }
