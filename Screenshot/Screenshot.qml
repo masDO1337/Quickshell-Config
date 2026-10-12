@@ -80,7 +80,7 @@ PanelWindow {
         property real borderRadius: 8.0
         property real outlineThickness: 1.0  
         
-        fragmentShader: Qt.resolvedUrl("shaders/dimming.frag.qsb") 
+        fragmentShader: Qt.resolvedUrl("shader/dimming.frag.qsb") 
     }
 
     MouseArea {  
