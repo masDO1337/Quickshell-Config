@@ -16,6 +16,52 @@ Singleton {
     property var networks: []
     property var knownNetworks: []
 
+    property string netIface: "offline"
+    property string netIp: ""
+    property int netType: 0
+    
+    onNetIfaceChanged: {
+        if (netIface === "offline") netType = 0
+        else if (netIface.startsWith("en")) netType = 1
+        else if (netIface.startsWith("usb")) netType = 1
+        else if (netIface.startsWith("wl")) netType = 2
+        else netType = 3
+    }
+
+    Process {
+        id: netCheck
+
+        command: [
+            "sh", "-c",
+            "iface=$(ip route get 1.1.1.1 2>/dev/null | awk '{for (i=1; i<=NF; i++) if ($i==\"dev\") print $(i+1)}'); " +
+            "if [ -n \"$iface\" ]; then " +
+            "ip -4 addr show dev \"$iface\" | awk -v i=\"$iface\" '/inet / {print i, $2}' | cut -d/ -f1; " +
+            "else echo offline; fi"
+        ]
+
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const output = text.trim()
+                if (output === "offline" || output.length === 0) {
+                    root.netIface = "offline";
+                    root.netIp = "";
+                    return;
+                }
+
+                const parts = output.split(/\s+/);
+                root.netIface = parts[0];
+                root.netIp = parts[1] || "";
+            }
+        }
+    }
+
+    Timer {
+        interval: 5000
+        running: true
+        repeat: true
+        onTriggered: netCheck.running = true
+    }
+
     function shQuote(s) {
         return "'" + String(s).replace(/'/g, "'\\''") + "'"
     }
