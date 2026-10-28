@@ -6,7 +6,7 @@ import Quickshell.Hyprland
 import "../services" as Services
 
 PanelWindow {
-    id: launcherPanel
+    id: root
     
     visible: false
     focusable: false
@@ -33,21 +33,21 @@ PanelWindow {
 
     HyprlandFocusGrab {
         id: grab
-        windows: [ launcherPanel ]
+        windows: [ root ]
         onCleared: () => {
-            launcherPanel.visible = false
+            root.visible = false
         }
     }
 
     Shortcut {
         sequence: "ESCAPE"
-        onActivated: launcherPanel.visible = false
+        onActivated: root.visible = false
     }
 
     function appRun(entry) {
         Services.AppLauncher.increment(entry)
         entry.execute();
-        launcherPanel.toggle()
+        root.toggle()
     }
 
     Rectangle {
@@ -87,7 +87,7 @@ PanelWindow {
                         event.accepted = true;
                         if (output.currentIndex >= 0) {
                             const entry = Services.AppLauncher.filteredApps.values[output.currentIndex];
-                            if (entry) launcherPanel.appRun(entry)
+                            if (entry) root.appRun(entry)
                         }
                     }
                 }
@@ -103,7 +103,7 @@ PanelWindow {
                 id: output
                 model: Services.AppLauncher.filteredApps
                 currentIndex: 0
-                onClicked: entry => launcherPanel.appRun(entry)
+                onClicked: entry => root.appRun(entry)
             }
         }
     }
