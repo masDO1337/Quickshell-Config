@@ -11,8 +11,8 @@ PanelWindow {
     visible: false
     focusable: false
 
-    implicitWidth: body.implicitWidth
-    implicitHeight: body.implicitHeight
+    implicitWidth: 580
+    implicitHeight: 480
     
     color: 'transparent'
 
@@ -53,9 +53,7 @@ PanelWindow {
     Rectangle {
         id: body
 
-        anchors.centerIn: parent
-        implicitWidth: Math.max(content.implicitWidth + 20, 580)
-        implicitHeight: Math.max(content.implicitHeight + 20, 480)
+        anchors.fill: parent
 
         radius: 8
         border.width: 1
