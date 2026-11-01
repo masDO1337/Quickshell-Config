@@ -8,6 +8,7 @@ A personal Quickshell desktop configuration built for Hyprland. It provides a co
 - **App launcher** with search and keyboard navigation
 - **Notification popups and center** for desktop notifications
 - **Power menu** for logout, shutdown, reboot, and suspend actions
+- **Wallpaper picker** for static images, videos, and GIFs, with random and clear options
 - **Multi-monitor support** with independent panels per display
 - **Screenshot utility** with region/window selection and dimming overlay
 - **Extra helper script** for Minecraft server status checks
@@ -21,6 +22,7 @@ A personal Quickshell desktop configuration built for Hyprland. It provides a co
 - `PowerMenu/` — power actions and menu UI
 - `Polkit/` — authentication integration
 - `Screenshot/` — screenshot utility with region/window selection
+- `Wallpaper/` — per-monitor wallpaper display and picker
 - `services/` — application/service logic used by the UI
 - `scripts/` — helper scripts, including `mcserver.py`
 
@@ -31,6 +33,7 @@ A personal Quickshell desktop configuration built for Hyprland. It provides a co
 - `hyprland` — Wayland compositor and window manager
 - `quickshell` — Qt-based shell/compositor UI layer
 - `qt6-base` — Qt 6 libraries
+- `qt6-multimedia` — video wallpaper playback
 - `dbus` — D-Bus session daemon
 
 ### System Services
@@ -61,8 +64,10 @@ Media players must support MPRIS D-Bus interface for media controls in the statu
 ## Usage
 
 1. Place this directory in your Quickshell config location.
-2. Ensure Quickshell is started in your Hyprland session.
-3. Use the configured keyboard shortcuts and bar controls to open the launcher, notifications, and power menu.
+2. Use the configured keyboard shortcuts and bar controls to open the launcher, notifications, and power menu.
+3. Put wallpaper files in `~/Pictures/Wallpaper`. Supported formats are PNG/JPG/JPEG images, MP4/MKV/WebM videos, and GIFs. Videos play muted and loop.
+4. Ensure Quickshell is started in your Hyprland session.
+5. Open the wallpaper picker using the `toggle wallpapers` Quickshell IPC action. Use the Image, Video, and GIF filters to browse; select a thumbnail to apply it, or use Random or Clear. With no wallpaper selected, the shell displays its built-in shader background.
 
 ## Notes
 
