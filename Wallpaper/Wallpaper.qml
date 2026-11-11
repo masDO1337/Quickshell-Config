@@ -22,11 +22,12 @@ PanelWindow {
     WlrLayershell.namespace: "quickshell-wallpaper"
 
     // global wallpaper source path, can be set by the user or randomly selected from the wallpapers directory.
-    property string sourcePath: Services.Wallpapers.getRandomFilePath()
+    property string sourcePath: { const path = Services.Wallpapers.get(root.screen.name); return path; }
 
     readonly property bool isImage: /\.(png|jpe?g|webp)$/i.test(sourcePath)
     readonly property bool isGif: sourcePath.endsWith(".gif")
     readonly property bool isVideo: /\.(mp4|mkv|webm)$/i.test(sourcePath)
+    readonly property bool isShader: sourcePath.endsWith(".qsb")
 
     // Static image
     Image {
@@ -87,22 +88,16 @@ PanelWindow {
     ShaderEffect {
         id: shader
         anchors.fill: parent
-        visible: root.sourcePath === ""
+        visible: root.sourcePath === "" || root.isShader
 
         property real time: 0.0
         property vector2d resolution: Qt.vector2d(width, height)
 
-        fragmentShader: Qt.resolvedUrl("shaders/ambient.frag.qsb")
+        fragmentShader: root.isShader ? root.sourcePath : Qt.resolvedUrl("shaders/ambient.frag.qsb")
     }
 
     FrameAnimation {
-        running: root.sourcePath === ""
+        running: root.sourcePath === "" || root.isShader
         onTriggered: shader.time = elapsedTime
     }
-
-    // Optional subtle tint; remove this Rectangle if you want original brightness.
-    // Rectangle {
-    //     anchors.fill: parent
-    //     color: "#08000000"
-    // }
 }

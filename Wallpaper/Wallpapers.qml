@@ -75,7 +75,15 @@ PanelWindow {
         sequence: "Return"
         onActivated: {
             if (wallpaperList.currentIndex < 0 || wallpaperList.currentIndex > wallpaperList.count - 1) return
-            root.currentWallpaper.sourcePath = wallpaperList.currentItem.modelData.filePath
+            //root.currentWallpaper.sourcePath = wallpaperList.currentItem.modelData.filePath
+            Services.Wallpapers.save(root.screen.name, wallpaperList.currentItem.modelData.filePath)
+        }
+    }
+
+    function setWallpaper(sorcePath, save = true) {
+        currentWallpaper.sourcePath = sorcePath
+        if (save) {
+            Services.Wallpapers.save(root.screen.name, sorcePath)
         }
     }
 
@@ -138,10 +146,19 @@ PanelWindow {
                 }
 
                 UI.Button {
-                    text: "Random"
+                    text: "Shader"
+                    active: wallpaperList.mode === 3
                     onClicked: () => {
-                        const randomPath = Services.Wallpapers.getRandomFilePath()
-                        if (randomPath.length > 0) root.currentWallpaper.sourcePath = randomPath
+                        wallpaperList.mode = 3
+                        wallpaperList.currentIndex = 0
+                    }
+                }
+
+                UI.Button {
+                    text: Services.Wallpapers.isRandom(root.screen.name) ? "Random: On" : "Random: Off"
+                    onClicked: () => {
+                        root.setWallpaper(Services.Wallpapers.getRandomFilePath(), false)
+                        Services.Wallpapers.save(root.screen.name, "")
                         wallpaperList.getCurrentWallpaperModeAndIndex()
                     }
                 }
@@ -149,7 +166,7 @@ PanelWindow {
                 UI.Button {
                     text: "Clear"
                     onClicked: () => {
-                        root.currentWallpaper.sourcePath = ""
+                        root.setWallpaper("")
                         wallpaperList.getCurrentWallpaperModeAndIndex()
                     }
                 }
@@ -160,7 +177,7 @@ PanelWindow {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                property int mode: 0 // 0 = wallpaper, 1 = live wallpaper, 2 = live gif wallpaper
+                property int mode: 0 // 0 = wallpaper, 1 = live wallpaper, 2 = live gif wallpaper, 3 = shader wallpaper
 
                 model: Services.Wallpapers.allWallpaperModel[mode]
 
@@ -189,6 +206,8 @@ PanelWindow {
                         mode = 1
                     } else if (sorcePath.endsWith(".gif")) {
                         mode = 2
+                    } else if (sorcePath.endsWith(".qsb")) {
+                        mode = 3
                     } else {
                         mode = 0
                     }
@@ -231,6 +250,8 @@ PanelWindow {
 
                     readonly property bool isVideo: /\.(mp4|mkv|webm)$/i.test(filePath)
 
+                    readonly property bool isShader: filePath.endsWith(".qsb")
+
                     width: 200
                     height: wallpaperList.height
                     radius: 8
@@ -242,7 +263,9 @@ PanelWindow {
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onEntered: wallpaperList.currentIndex = delegateRoot.index
-                        onClicked: root.currentWallpaper.sourcePath = delegateRoot.modelData.filePath
+                        onClicked: {
+                            root.setWallpaper(delegateRoot.modelData.filePath)
+                        }
                     }
 
                     Image {
@@ -273,13 +296,13 @@ PanelWindow {
                         id: video
                         anchors.fill: parent
                         anchors.margins: 4
-                        visible: delegateRoot.isVideo && delegateRoot.isCurrent
+                        visible: delegateRoot.isVideo
                         fillMode: VideoOutput.PreserveAspectCrop
                     }
 
                     MediaPlayer {
                         id: player
-                        source: delegateRoot.isVideo && delegateRoot.isCurrent && root.visible ? delegateRoot.filePath : ""
+                        source: delegateRoot.isVideo && root.visible ? delegateRoot.filePath : ""
                         videoOutput: video
                         audioOutput: AudioOutput {
                             muted: true
