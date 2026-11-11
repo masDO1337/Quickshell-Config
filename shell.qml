@@ -12,7 +12,6 @@ import "PowerMenu"
 import "Polkit"
 import "Screenshot"
 import "Wallpaper"
-import "services" as Services
 
 ShellRoot {
     id: root
