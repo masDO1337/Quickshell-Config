@@ -9,7 +9,7 @@ Item {
     id: root
     Layout.fillHeight: true
     Layout.preferredWidth: box.implicitWidth
-    visible: Bluetooth.defaultAdapter
+    visible: (Bluetooth.defaultAdapter !== null && Bluetooth.defaultAdapter.state !== BluetoothAdapterState.Blocked)
 
     UI.Button {
         id: box
