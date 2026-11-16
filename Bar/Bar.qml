@@ -23,12 +23,12 @@ PanelWindow {
 
     SequentialAnimation {
         running: true
-        PauseAnimation { duration: 50 }
+        PauseAnimation { duration: 500 }
         NumberAnimation {
             target: bar
             property: "margins.top"
             to: 0
-            duration: 360
+            duration: 480
         }
     }
 

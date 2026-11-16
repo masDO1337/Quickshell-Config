@@ -55,7 +55,7 @@ Singleton {
     }
 
     function get(name) {
-        if (screens.hasOwnProperty(name) === false) return ""
+        if (screens.hasOwnProperty(name) === false) return getRandomFilePath()
         const path = screens[name].path === "" ? getRandomFilePath() : screens[name].path
         return path
     }

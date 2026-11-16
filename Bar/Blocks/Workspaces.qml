@@ -29,7 +29,7 @@ ClippingRectangle {
                 Layout.preferredHeight: 24
                 Layout.preferredWidth: text.implicitWidth > text.implicitHeight ? text.implicitWidth + 16 : text.implicitHeight + 8
 
-                color: modelData.urgent ? "#f3a6a6" : m.containsMouse ? "#7f7f7f" : '#00ffffff'
+                color: modelData.urgent ? "#f3a6a6" : m.containsMouse ? "#7f7f7f" : 'transparent'
 
                 Behavior on color {
                     ColorAnimation { duration: 350; easing.type: Easing.OutCubic }

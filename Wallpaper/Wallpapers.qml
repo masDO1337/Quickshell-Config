@@ -75,8 +75,7 @@ PanelWindow {
         sequence: "Return"
         onActivated: {
             if (wallpaperList.currentIndex < 0 || wallpaperList.currentIndex > wallpaperList.count - 1) return
-            //root.currentWallpaper.sourcePath = wallpaperList.currentItem.modelData.filePath
-            Services.Wallpapers.save(root.screen.name, wallpaperList.currentItem.modelData.filePath)
+            root.setWallpaper(wallpaperList.currentItem.modelData.filePath)
         }
     }
 
