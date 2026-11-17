@@ -65,6 +65,12 @@ def query(host, port):
         channels = len(status.raw["forgeData"].get("channels", []))
         mods = len(status.raw["forgeData"].get("mods", []))
 
+    if "modinfo" in status.raw:
+        mods = len(status.raw["modinfo"].get("modList", []))
+
+    # Debugging: print(status.raw)
+    #print(status.raw)
+
     data = {
         "online": True,
         "latency_ms": status.latency,

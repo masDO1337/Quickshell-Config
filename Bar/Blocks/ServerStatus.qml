@@ -10,11 +10,17 @@ Item {
     Layout.fillHeight: true
     implicitWidth: box.implicitWidth
 
+    property var mc: Services.ServerStatus.mc
+
     UI.Button {
         id: box
         anchors.centerIn: parent
 
-        source: Services.ServerStatus.serverOn ? Qt.resolvedUrl(Quickshell.shellPath("Icons/server-white.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/server.svg"))
+        source: root.mc?.online ? Qt.resolvedUrl(Quickshell.shellPath("Icons/server-green.svg")) : Services.ServerStatus.serverOn ? Qt.resolvedUrl(Quickshell.shellPath("Icons/server-white.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/server.svg"))
+
+        text: root.mc?.online ? `${root.mc.players?.online ?? ""}/${root.mc.players?.max ?? ""}` : ""
+
+        textColor: root.mc?.online ? "#aef3a6" : "white"
 
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         onClicked: (event) => {
