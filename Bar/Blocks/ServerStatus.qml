@@ -8,32 +8,70 @@ import "UI" as UI
 Item {
     id: root
     Layout.fillHeight: true
-    implicitWidth: box.implicitWidth
+    Layout.preferredWidth: row.implicitWidth
 
-    property var mc: Services.ServerStatus.mc
+    RowLayout {
+        id: row
+        anchors.fill: parent
+        spacing: 4
 
-    UI.Button {
-        id: box
-        anchors.centerIn: parent
+        Repeater {
+            model: Services.ServerStatus.servers
 
-        source: root.mc?.online ? Qt.resolvedUrl(Quickshell.shellPath("Icons/server-green.svg")) : Services.ServerStatus.serverOn ? Qt.resolvedUrl(Quickshell.shellPath("Icons/server-white.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/server.svg"))
+            Item {
+                id: serverItem
+                
+                required property int index
+                required property var modelData
 
-        text: root.mc?.online ? `${root.mc.players?.online ?? ""}/${root.mc.players?.max ?? ""}` : ""
+                Layout.fillHeight: true
+                Layout.preferredWidth: serverButton.implicitWidth
 
-        textColor: root.mc?.online ? "#aef3a6" : "white"
+                UI.Button {
+                    id: serverButton
+                    anchors.centerIn: parent
 
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
-        onClicked: (event) => {
-            if (event.button == Qt.LeftButton) {
-                serverStatus.toggle()
-            } else if (event.button == Qt.RightButton) {
-                Services.ServerStatus.check()
+                    source: serverItem.modelData.mc.online ? Qt.resolvedUrl(Quickshell.shellPath("Icons/server-green.svg")) : serverItem.modelData.serverOn ? Qt.resolvedUrl(Quickshell.shellPath("Icons/server-white.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/server.svg"))
+
+                    text: serverItem.modelData.mc.online ? `${serverItem.modelData.mc.players.online} / ${serverItem.modelData.mc.players.max}` : ""
+
+                    textColor: "#AEF3A6"
+
+                    acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
+                    onClicked: (event) => {
+                        if (event.button == Qt.LeftButton) {
+                            serverStatus.toggle()
+                        } else if (event.button == Qt.RightButton) {
+                            Services.ServerStatus.check(serverItem.index, true)
+                        } else if (event.button == Qt.MiddleButton) {
+                            Services.ServerStatus.addServer()
+                        }
+                    }
+                }
+
+                ServerStatusPanel {
+                    id: serverStatus
+                    parentItem: serverItem
+                    index: serverItem.index
+                    modelData: serverItem.modelData
+                }
             }
         }
-    }
-    
-    ServerStatusPanel {
-        id: serverStatus
-        parentItem: root
+
+        UI.Button {
+            id: add
+            visible: Services.ServerStatus.servers.length == 0
+
+            source: add.mouse.containsMouse ? Qt.resolvedUrl(Quickshell.shellPath("Icons/plus-white.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/plus.svg"))
+
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
+            onClicked: (event) => {
+                if (event.button == Qt.LeftButton) {
+                    Services.ServerStatus.addServer()
+                } else if (event.button == Qt.RightButton) {
+                    Services.ServerStatus.check()
+                }
+            }
+        }
     }
 }

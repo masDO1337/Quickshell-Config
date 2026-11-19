@@ -8,7 +8,7 @@ Singleton {
     id: root
 
     readonly property FileView file: FileView {
-        path: Quickshell.cachePath("server.json")
+        path: Quickshell.cachePath("servers.json")
 
         watchChanges: true
         onFileChanged: reload()
@@ -18,29 +18,27 @@ Singleton {
         JsonAdapter {
             id: adapter
 
-            property string host: ""
-            property int port: 25565
+            property list<var> servers: []
         }
 
         onLoaded: root.check()
     }
 
-    readonly property string host: file.adapter.host
-    readonly property int port: file.adapter.port
+    Timer {
+        id: checkTimer
+        interval: 300000 // 5 minute
+        repeat: true
+        running: root.file.adapter.servers.length > 0
 
-    property bool checking: false
-    property bool serverOn: false
+        onTriggered: root.check()
+    }
 
-    property int latency: -1
-
-    property string status: "Unknown"
-
-    property date lastChecked: new Date(0)
-
-    property var mc: ({})
+    property list<var> servers: file.adapter.servers
+    property int serverIndex: -1
+    property bool checkOne: false
 
     property Polkit.Message message: Polkit.Message {
-        title: "Set Server"
+        title: "Add Server"
         message: `Enter IP and Port for server`
         inputs: [
             Polkit.Input {
@@ -78,53 +76,74 @@ Singleton {
                 return
             }
 
-            if (response.data[0] === root.host && Number(response.data[1]) === root.port) {
-                Polkit.error("Server is already set to this IP and port")
-                return
+            for (const server of root.servers) {
+                if (server.host === response.data[0] && Number(server.port) === Number(response.data[1])) {
+                    Polkit.error("Server is already in the list")
+                    return
+                }
             }
 
-            root.file.adapter.host = response.data[0]
-            root.file.adapter.port = Number(response.data[1])
-            Polkit.accept(`Server is set to ${root.host}:${root.port}`)
+            var newServers = {
+                host: response.data[0],
+                port: Number(response.data[1]),
+                lastChecked: null,
+                latency: -1,
+                serverOn: false,
+                mc: {}
+            }
+
+            if (root.file.adapter.servers === undefined) {
+                root.file.adapter.servers = []
+            }
+
+            root.file.adapter.servers.push(newServers)
+
+            Polkit.accept(`Server ${newServers.host}:${newServers.port} is added to the list!`)
         }
     }
 
-    function setIP() {
+    function addServer() {
         message.clear()
-        message.inputs[0].value = root.host
-        message.inputs[1].value = root.port
+        message.inputs[0].value = ''
+        message.inputs[1].value = 25565
         Polkit.request(message)
     }
 
-    function check() {
-        if (host === "" || port <= 0) return
-        if (pcChecker.running || mcStatusProc.running) return
+    function removeServer(index) {
+        if (index < 0 || index >= root.servers.length) {
+            console.log("Invalid server index:", index)
+            return
+        }
 
-        checking = true
-        serverOn = false
-        latency = -1
-
-        mc = {}
-
-        status = "Checking server..."
-        mcStatusProc.running = true
+        root.file.adapter.servers.splice(index, 1)
     }
 
-    function checkPc() {
-        status = "Server offline, checking PC..."
-        pcChecker.running = true
+    function check(index = 0, one = false) {
+        if (servers.length === 0) return
+        if (pcChecker.running || mcStatusProc.running) return
+
+        serverIndex = index
+        checkOne = one
+
+        //console.log(`Run server check for index ${serverIndex}`)
+
+        mcStatusProc.execute(servers[serverIndex].host, servers[serverIndex].port)
     }
 
     Process {
         id: mcStatusProc
         running: false
 
-        command: [
-            Quickshell.shellPath("scripts/venv/bin/python"),
-            Quickshell.shellPath("scripts/mcserver.py"),
-            root.host,
-            root.port
-        ]
+
+        function execute(host, port) {
+            var command = [
+                Quickshell.shellPath("scripts/venv/bin/python"),
+                Quickshell.shellPath("scripts/mcserver.py"),
+                host,
+                port
+            ]
+            mcStatusProc.exec(command)
+        }
 
         property string buffer: ""
 
@@ -138,26 +157,30 @@ Singleton {
             buffer = ""
         }
 
-        onExited: () => {
-            try {
-                //console.log(buffer)
-                root.mc = JSON.parse(buffer)
+        onExited: (exitCode, exitStatus) => {
+            if (exitCode !== 0) {
+                console.log("Process failed:", exitCode)
+                return
+            }
+            const mc = JSON.parse(buffer)
+            root.servers[root.serverIndex].mc = mc
 
-                if (root.mc.online) {
-                    root.status = "Server online"
-                    root.serverOn = true
-                    root.latency = root.mc.latency_ms
-                    root.checking = false
-                } else {
-                    root.checkPc()
+            //console.log(`server index ${root.serverIndex} is ${mc.online ? "Online" : "Offline"}`)
+
+            if (mc.online) {
+                root.servers[root.serverIndex].lastChecked = new Date()
+                root.servers[root.serverIndex].latency = Math.round(Number(mc.latency_ms)) ?? -1
+                root.servers[root.serverIndex].serverOn = mc.online ?? false
+
+                if (root.serverIndex + 1 < root.servers.length && !root.checkOne) {
+                    root.check(root.serverIndex + 1)
                 }
 
-            } catch (e) {
-                root.status = "Minecraft info error: " + String(e)
-            }
+                if (root.checkOne) root.checkOne = false
 
-            root.checking = false
-            root.lastChecked = new Date()
+            } else {
+                pcChecker.execute(root.servers[root.serverIndex].host)
+            }
         }
     }
 
@@ -165,31 +188,37 @@ Singleton {
         id: pcChecker
         running: false
 
-        command: [
-            "sh", "-c",
-            "ping -c 1 -W 2 " + root.host + " | awk -F'time=' '/time=/{print $2}' | awk '{print $1}'"
-        ]
+        function execute(host) {
+            var command = [
+                "sh", "-c",
+                "ping -c 1 -W 2 " + host + " | awk -F'time=' '/time=/{print $2}' | awk '{print $1}'"
+            ]
+            pcChecker.exec(command)
+        }
 
         stdout: SplitParser {
             onRead: line => {
                 const ms = Number(line.trim())
 
-                root.serverOn = !isNaN(ms)
-                root.latency = root.serverOn ? Math.round(ms) : -1
+                root.servers[root.serverIndex].serverOn = !isNaN(ms)
+                root.servers[root.serverIndex].latency = root.servers[root.serverIndex].serverOn ? Math.round(ms) : -1
             }
         }
 
-        onExited: () => {
-            if (root.mc.error === "Server did not respond with any information!") {
-                root.status = "Server online?"
-            } else if (root.serverOn) {
-                root.status = "PC online, server offline"
-            } else {
-                root.status = "PC offline"
+        onExited: (exitCode, exitStatus) => {
+            if (exitCode !== 0) {
+                console.log("Process failed:", exitCode)
             }
 
-            root.checking = false
-            root.lastChecked = new Date()
+            //console.log(`server index ${root.serverIndex} is ${root.servers[root.serverIndex].serverOn ? "Live" : "Dead"}`)
+
+            root.servers[root.serverIndex].lastChecked = new Date()
+
+            if (root.serverIndex + 1 < root.servers.length && !root.checkOne) {
+                root.check(root.serverIndex + 1)
+            }
+
+            if (root.checkOne) root.checkOne = false
         }
     }
 }

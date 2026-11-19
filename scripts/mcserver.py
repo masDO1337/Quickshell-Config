@@ -2,6 +2,7 @@
 
 import json
 import sys
+import asyncio
 from dataclasses import asdict, is_dataclass
 from typing import Any
 
@@ -54,13 +55,14 @@ def detect_server_type(status):
 
     return "Vanilla"
 
-def query(host, port):
+async def query(host, port):
     server = JavaServer.lookup(f"{host}:{port}")
-    status = server.status()
+    status = await server.async_status()
 
     channels = 0
     mods = 0
 
+    # Check for Forge/NeoForge data
     if "forgeData" in status.raw:
         channels = len(status.raw["forgeData"].get("channels", []))
         mods = len(status.raw["forgeData"].get("mods", []))
@@ -71,6 +73,7 @@ def query(host, port):
     # Debugging: print(status.raw)
     #print(status.raw)
 
+    # Build the output data structure
     data = {
         "online": True,
         "latency_ms": status.latency,
@@ -99,15 +102,15 @@ def query(host, port):
         ),
     }
 
-    return data
+    # Output the data as JSON
+    print(json.dumps(data, ensure_ascii=False, default=json_default))
 
 
 if __name__ == "__main__":
     try:
         host = sys.argv[1]
         port = int(sys.argv[2]) if len(sys.argv) > 2 else 25565
-
-        print(json.dumps(query(host, port), ensure_ascii=False, default=json_default))
+        asyncio.run(query(host, port))
     except Exception as e:
         print(json.dumps({
             "online": False,
