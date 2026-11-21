@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import Quickshell
 import Quickshell.Widgets
 import QtQuick
@@ -64,7 +66,7 @@ Tooltip {
 
                         Text {
                             Layout.fillWidth: true
-                            text: root.modelData.serverOn ? "Online" : "Offline"
+                            text: root.modelData.checking ? "Checking..." : root.modelData.serverOn ? "Online" : "Offline"
                             color: root.modelData.serverOn ? "#ffffff" : "#808080"
                             font.pixelSize: 12
                         }

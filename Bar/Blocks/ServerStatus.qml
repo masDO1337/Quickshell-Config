@@ -16,13 +16,13 @@ Item {
         spacing: 4
 
         Repeater {
-            model: Services.ServerStatus.servers
+            model: Services.ServerStatus.servers.length
 
             Item {
                 id: serverItem
                 
                 required property int index
-                required property var modelData
+                property var modelData: Services.ServerStatus.servers[index]
 
                 Layout.fillHeight: true
                 Layout.preferredWidth: serverButton.implicitWidth

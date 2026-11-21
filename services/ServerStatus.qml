@@ -88,6 +88,7 @@ Singleton {
                 port: Number(response.data[1]),
                 lastChecked: null,
                 latency: -1,
+                checking: false,
                 serverOn: false,
                 mc: {}
             }
@@ -126,14 +127,13 @@ Singleton {
         checkOne = one
 
         //console.log(`Run server check for index ${serverIndex}`)
-
+        servers[serverIndex].checking = true
         mcStatusProc.execute(servers[serverIndex].host, servers[serverIndex].port)
     }
 
     Process {
         id: mcStatusProc
         running: false
-
 
         function execute(host, port) {
             var command = [
@@ -171,6 +171,7 @@ Singleton {
                 root.servers[root.serverIndex].lastChecked = new Date()
                 root.servers[root.serverIndex].latency = Math.round(Number(mc.latency_ms)) ?? -1
                 root.servers[root.serverIndex].serverOn = mc.online ?? false
+                root.servers[root.serverIndex].checking = false
 
                 if (root.serverIndex + 1 < root.servers.length && !root.checkOne) {
                     root.check(root.serverIndex + 1)
@@ -213,6 +214,7 @@ Singleton {
             //console.log(`server index ${root.serverIndex} is ${root.servers[root.serverIndex].serverOn ? "Live" : "Dead"}`)
 
             root.servers[root.serverIndex].lastChecked = new Date()
+            root.servers[root.serverIndex].checking = false
 
             if (root.serverIndex + 1 < root.servers.length && !root.checkOne) {
                 root.check(root.serverIndex + 1)
