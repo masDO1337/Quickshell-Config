@@ -23,6 +23,7 @@ Item {
                 
                 required property int index
                 property var modelData: Services.ServerStatus.servers[index]
+                property var online: modelData.mc.online
 
                 Layout.fillHeight: true
                 Layout.preferredWidth: serverButton.implicitWidth
@@ -30,13 +31,9 @@ Item {
                 UI.Button {
                     id: serverButton
                     anchors.centerIn: parent
-
-                    source: serverItem.modelData.mc.online ? Qt.resolvedUrl(Quickshell.shellPath("Icons/server-green.svg")) : serverItem.modelData.serverOn ? Qt.resolvedUrl(Quickshell.shellPath("Icons/server-white.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/server.svg"))
-
-                    text: serverItem.modelData.mc.online ? `${serverItem.modelData.mc.players.online} / ${serverItem.modelData.mc.players.max}` : ""
-
+                    source: serverItem.online ? Qt.resolvedUrl(Quickshell.shellPath("Icons/server-green.svg")) : serverItem.modelData.serverOn ? Qt.resolvedUrl(Quickshell.shellPath("Icons/server-white.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/server.svg"))
+                    text: serverItem.online ? `${serverItem.modelData.mc.players.online} / ${serverItem.modelData.mc.players.max}` : ""
                     textColor: "#AEF3A6"
-
                     acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
                     onClicked: (event) => {
                         if (event.button == Qt.LeftButton) {
@@ -61,9 +58,7 @@ Item {
         UI.Button {
             id: add
             visible: Services.ServerStatus.servers.length == 0
-
             source: add.mouse.containsMouse ? Qt.resolvedUrl(Quickshell.shellPath("Icons/plus-white.svg")) : Qt.resolvedUrl(Quickshell.shellPath("Icons/plus.svg"))
-
             acceptedButtons: Qt.LeftButton | Qt.RightButton
             onClicked: (event) => {
                 if (event.button == Qt.LeftButton) {
